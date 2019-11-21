@@ -1,0 +1,45 @@
+<div class="page-header">
+  <h1>Users</h1>
+</div>
+<ul class="list-unstyled list-inline">
+  <li>
+    <%= linkTo(newUsersPath(), {class: "btn btn-primary"}) { %>
+      Create New User
+    <% } %>
+  </li>
+</ul>
+
+<table class="table table-striped">
+  <thead>
+  <th>Username</th>
+    <th>Password</th>
+    <th>Salt</th>
+    <th>Admin</th>
+    <th>ClassTeacher</th>
+    <th>TeacherID</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (user) in users { %>
+      <tr>
+      <td><%= user.Username %></td>
+        <td><%= user.Password %></td>
+        <td><%= user.Salt %></td>
+        <td><%= user.Admin %></td>
+        <td><%= user.ClassTeacher %></td>
+        <td><%= user.TeacherID %></td>
+        <td>
+          <div class="pull-right">
+            <%= linkTo(userPath({ user_id: user.ID }), {class: "btn btn-info", body: "View"}) %>
+            <%= linkTo(editUserPath({ user_id: user.ID }), {class: "btn btn-warning", body: "Edit"}) %>
+            <%= linkTo(userPath({ user_id: user.ID }), {class: "btn btn-danger", "data-method": "DELETE", "data-confirm": "Are you sure?", body: "Destroy"}) %>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= paginator(pagination) %>
+</div>
