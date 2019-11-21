@@ -15,7 +15,6 @@ func RoutesHandler(c buffalo.Context) error {
 	if ENV != "development" {
 		return c.Render(200, r.HTML("routes.html"))
 	} else {
-		c.Set("isError", true)
 		return c.Render(500, r.HTML("null.html", "_500.html"))
 	}
 }

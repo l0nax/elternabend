@@ -102,8 +102,6 @@ func AddVariablesMiddleware(next buffalo.Handler) buffalo.Handler {
 		// add the GO_ENV variable
 		c.Set("ENV", ENV)
 
-		c.Set("isError", false)
-
 		return next(c)
 	}
 }
