@@ -40,6 +40,9 @@ func App() *buffalo.App {
 			SessionName: "_elternabend_session",
 		})
 
+		// add some Variables
+		app.Use(AddVariablesMiddleware)
+
 		// Automatically redirect to SSL
 		app.Use(forceSSL())
 
@@ -59,6 +62,9 @@ func App() *buffalo.App {
 		app.Use(translations())
 
 		app.GET("/", HomeHandler)
+
+		// ===> Only for Developing <===
+		app.GET("/routes", RoutesHandler)
 
 		app.Resource("/users", UsersResource{})
 		app.ServeFiles("/", assetsBox) // serve files from the public directory
@@ -89,4 +95,15 @@ func forceSSL() buffalo.MiddlewareFunc {
 		SSLRedirect:     ENV == "production",
 		SSLProxyHeaders: map[string]string{"X-Forwarded-Proto": "https"},
 	})
+}
+
+func AddVariablesMiddleware(next buffalo.Handler) buffalo.Handler {
+	return func(c buffalo.Context) error {
+		// add the GO_ENV variable
+		c.Set("ENV", ENV)
+
+		c.Set("isError", false)
+
+		return next(c)
+	}
 }
