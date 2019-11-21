@@ -4,20 +4,21 @@ import (
 	"encoding/json"
 	"github.com/gobuffalo/pop"
 	"github.com/gobuffalo/validate"
+	"github.com/gobuffalo/validate/validators"
 	"github.com/gofrs/uuid"
 	"time"
-	"github.com/gobuffalo/validate/validators"
 )
+
 type User struct {
-    ID uuid.UUID `json:"id" db:"id"`
-    Username string `json:"username" db:"username"`
-    Password string `json:"password" db:"password"`
-    Salt string `json:"salt" db:"salt"`
-    Admin boolean `json:"admin" db:"admin"`
-    ClassTeacher boolean `json:"class_teacher" db:"class_teacher"`
-    TeacherID int `json:"teacher_id" db:"teacher_id"`
-    CreatedAt time.Time `json:"created_at" db:"created_at"`
-    UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
+	ID           uuid.UUID `json:"id" db:"id"`
+	Username     string    `json:"username" db:"username"`
+	Password     string    `json:"password" db:"password"`
+	Salt         string    `json:"salt" db:"salt"`
+	Admin        bool      `json:"admin" db:"admin"`
+	ClassTeacher bool      `json:"class_teacher" db:"class_teacher"`
+	TeacherID    int       `json:"teacher_id" db:"teacher_id"`
+	CreatedAt    time.Time `json:"created_at" db:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at" db:"updated_at"`
 }
 
 // String is not required by pop and may be deleted
