@@ -22,3 +22,9 @@
 
 - id: nav-login
   translation: "LogIn"
+
+- id: index_Title
+  translation: "Robert-Bosch-Schule Ulm Parents Evening Dashboard"
+
+- id: index_Description
+  translation: "This Website helps to get the Parents Evening organized."
