@@ -1,3 +1,21 @@
 # For more information on using i18n see: https://github.com/nicksnyder/go-i18n
 - id: welcome_greeting
   translation: "Welcome to Buffalo (EN)"
+
+- id: title
+  translation: "Parents evening"
+
+- id: nav-title
+  translation: "Parents evening"
+
+- id: nav-home
+  translation: "Home"
+
+- id: nav-classes
+  translation: "Classes"
+
+- id: nav-profs
+  translation: "Teachers"
+
+- id: nav-login
+  translation: "LogIn"
