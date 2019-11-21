@@ -2,6 +2,9 @@
 - id: welcome_greeting
   translation: "Welcome to Buffalo (EN)"
 
+- id: footer_text
+  translation: "This is Powered by RBS"
+
 - id: title
   translation: "Parents evening"
 
