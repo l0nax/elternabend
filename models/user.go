@@ -2,6 +2,7 @@ package models
 
 import (
 	"encoding/json"
+	"log"
 	"time"
 
 	"github.com/gobuffalo/pop"
@@ -26,7 +27,7 @@ type User struct {
 	Roles        []string   `json:"-" db:"roles"`         // a comma seperated list of all roles
 	SessionID    suuid.UUID `json:"-" db:"session_uuid"`
 	Password     string     `json:"-" db:"-"`
-	Email        string     `json:"mail" db:"mail"`
+	Email        string     `json:"email" db:"email"`
 }
 
 // String is not required by pop and may be deleted
@@ -77,19 +78,59 @@ func (u *User) Create(tx *pop.Connection) (*validate.Errors, error) {
 func (u *User) Validate(tx *pop.Connection) (*validate.Errors, error) {
 	return validate.Validate(
 		&validators.StringIsPresent{Field: u.Username, Name: "Username"},
-		&validators.StringIsPresent{Field: u.Password, Name: "Password"},
-		&validators.IntIsPresent{Field: u.TeacherID, Name: "TeacherID"},
+		&validators.StringIsPresent{Field: u.Password, Name: "PasswordHash"},
+		&validators.StringIsPresent{Field: u.Roles, Name: "Roles"}
+		&UsernameNotTaken{Name: "Username", Field: u.Username, tx: tx},
+		&EmailNotTaken{Name: "Email", Field: u.Email, tx: tx},
 	), nil
 }
 
 // ValidateCreate gets run every time you call "pop.ValidateAndCreate" method.
 // This method is not required and may be deleted.
 func (u *User) ValidateCreate(tx *pop.Connection) (*validate.Errors, error) {
-	return validate.NewErrors(), nil
+	return validate.Validate(
+		&UsernameNotTaken{Name: "Username", Field: u.Username, tx: tx},
+		&EmailNotTaken{Name: "Email", Field: u.Email, tx: tx},
+	), nil
 }
 
 // ValidateUpdate gets run every time you call "pop.ValidateAndUpdate" method.
 // This method is not required and may be deleted.
 func (u *User) ValidateUpdate(tx *pop.Connection) (*validate.Errors, error) {
 	return validate.NewErrors(), nil
+}
+
+// ==========> Custom Validators <==========
+
+type UsernameNotTaken struct {
+	Name  string
+	Field string
+	tx    *pop.Connection
+}
+
+func (v *UsernameNotTaken) IsValid(errors *validate.Errors) {
+	query := v.tx.Where("username = ?", v.Field)
+	queryUser := User{}
+	err := query.First(&queryUser)
+	if err == nil {
+		// found a user with same username
+		errors.Add(validators.GenerateKey(v.Name), log.Printf("The username %s is not available.", v.Field))
+	}
+}
+
+type EmailNotTaken struct {
+	Name  string
+	Field string
+	tx    *pop.Connection
+}
+
+// IsValid performs the validation check for unique emails
+func (v *EmailNotTaken) IsValid(errors *validate.Errors) {
+	query := v.tx.Where("email = ?", v.Field)
+	queryUser := User{}
+	err := query.First(&queryUser)
+	if err == nil {
+		// found a user with the same email
+		errors.Add(validators.GenerateKey(v.Name), "An account with that email already exists.")
+	}
 }

@@ -98,6 +98,16 @@ func App() *buffalo.App {
 				"GET",
 				LogOut,
 			},
+			{
+				"/new",
+				"GET",
+				CreateUser,
+			},
+			{
+				"/new",
+				"POST",
+				CreateUserPost,
+			},
 		}
 
 		for _, route := range userRoutes {
