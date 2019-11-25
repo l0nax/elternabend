@@ -1,7 +1,7 @@
 package actions
 
 import (
-	// "github.com/casbin/casbin"
+	"github.com/casbin/casbin"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/envy"
 	forcessl "github.com/gobuffalo/mw-forcessl"
@@ -42,12 +42,12 @@ func App() *buffalo.App {
 		})
 
 		// setup casbin auth rules
-		// authEnforcer, err := casbin.NewEnforcerSafe(envy.Get("RBAC_AUTH_MODEL_PATH", "rbac_model.conf"),
-		//         envy.Get("RBAC_POLICY_PATH", "rbac_policy.csv"))
-		// if err != nil {
-		//         // TODO: Log this as Fatal
-		//         panic(err)
-		// }
+		authEnforcer, err := casbin.NewEnforcerSafe(envy.Get("RBAC_AUTH_MODEL_PATH", "rbac_model.conf"),
+			envy.Get("RBAC_POLICY_PATH", "rbac_policy.csv"))
+		if err != nil {
+			// TODO: Log this as Fatal
+			panic(err)
+		}
 
 		// add some Variables
 		app.Use(AddVariablesMiddleware)
@@ -66,6 +66,9 @@ func App() *buffalo.App {
 		//  c.Value("tx").(*pop.Connection)
 		// Remove to disable this.
 		app.Use(popmw.Transaction(models.DB))
+
+		// add the authorizer MW
+		app.Use(NewRBACCheckMiddleware(authEnforcer))
 
 		// Setup and use translations:
 		app.Use(translations())
