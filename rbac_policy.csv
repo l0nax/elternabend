@@ -1,2 +1,4 @@
 p, admin, /*, *
-p, anonymous, /home/, GET
+p, anonymous, /, GET
+p, anonymous, /u/login, GET
+p, anonymous, /u/login, POST
