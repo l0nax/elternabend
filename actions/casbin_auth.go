@@ -18,7 +18,7 @@ var (
 )
 
 // This File contains the code which makes all the Authentication stuff
-func NewRBACCheckMiddleware(e *casbin.CachedEnforcer) buffalo.MiddlewareFunc {
+func NewRBACCheckMiddleware(e *casbin.Enforcer) buffalo.MiddlewareFunc {
 	return func(next buffalo.Handler) buffalo.Handler {
 		return func(c buffalo.Context) error {
 			roles, err := getRole(c)
