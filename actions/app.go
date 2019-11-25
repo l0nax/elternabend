@@ -6,6 +6,7 @@ import (
 	"github.com/gobuffalo/envy"
 	forcessl "github.com/gobuffalo/mw-forcessl"
 	paramlogger "github.com/gobuffalo/mw-paramlogger"
+	"github.com/gobuffalo/pop"
 	"github.com/unrolled/secure"
 
 	"github.com/gobuffalo/buffalo-pop/pop/popmw"
@@ -62,6 +63,9 @@ func App() *buffalo.App {
 		// Remove to disable this.
 		app.Use(csrf.New)
 
+		// Check if the User is already authentificated or not
+		app.Use(SetCurrentUser)
+
 		// Wraps each request in a transaction.
 		//  c.Value("tx").(*pop.Connection)
 		// Remove to disable this.
@@ -87,6 +91,11 @@ func App() *buffalo.App {
 				Route:   "/login",
 				Method:  "POST",
 				Handler: Login,
+			},
+			{
+				"/logout",
+				"GET",
+				LogOut,
 			},
 		}
 
@@ -147,6 +156,26 @@ func forceSSL() buffalo.MiddlewareFunc {
 		SSLRedirect:     ENV == "production",
 		SSLProxyHeaders: map[string]string{"X-Forwarded-Proto": "https"},
 	})
+}
+
+// SetCurrentUser attempts to find a user based on the session_id
+// in the session. If one is found it is set on the context.
+func SetCurrentUser(next buffalo.Handler) buffalo.Handler {
+	return func(c buffalo.Context) error {
+		if uuid := c.Session().Get("session_id"); uuid != nil {
+			user := &models.User{}
+			tx := c.Value("tx").(*pop.Connection)
+			err := tx.Find(user, uuid)
+			if err != nil {
+				return err
+			}
+			// TODO: Check if this is really needed!
+			c.Set("roles", user.Roles)
+			c.Set("user", user)
+		}
+
+		return next(c)
+	}
 }
 
 func AddVariablesMiddleware(next buffalo.Handler) buffalo.Handler {

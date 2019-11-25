@@ -20,8 +20,9 @@ type User struct {
 	TeacherID    int        `json:"-" db:"teacher_id"`    // check if only rw: r
 	CreatedAt    time.Time  `json:"-" db:"created_at"`    // check if only rw: r
 	UpdatedAt    time.Time  `json:"-" db:"updated_at"`    // check if only rw: r
+	Roles        string     `json:"-" db:"roles"`         // a comma seperated list of all roles
+	SessionID    suuid.UUID `json:"-" db:"session_uuid"`
 	Password     string     `json:"-" db:"-"`
-	SessionID    suuid.UUID `json:"-" db:"-"`
 }
 
 // String is not required by pop and may be deleted
