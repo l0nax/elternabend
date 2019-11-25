@@ -1,6 +1,7 @@
 package actions
 
 import (
+	// "github.com/casbin/casbin"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/envy"
 	forcessl "github.com/gobuffalo/mw-forcessl"
@@ -40,6 +41,14 @@ func App() *buffalo.App {
 			SessionName: "_elternabend_session",
 		})
 
+		// setup casbin auth rules
+		// authEnforcer, err := casbin.NewEnforcerSafe(envy.Get("RBAC_AUTH_MODEL_PATH", "rbac_model.conf"),
+		//         envy.Get("RBAC_POLICY_PATH", "rbac_policy.csv"))
+		// if err != nil {
+		//         // TODO: Log this as Fatal
+		//         panic(err)
+		// }
+
 		// add some Variables
 		app.Use(AddVariablesMiddleware)
 
@@ -63,8 +72,48 @@ func App() *buffalo.App {
 
 		app.GET("/", HomeHandler)
 
+		// ===> Auth/ User <===
+		userRoute := app.Group("/u/")
+		userRoutes := []RouteResource{
+			{
+				Route:   "/login",
+				Method:  "GET",
+				Handler: NewLogin,
+			},
+			{
+				Route:   "/login",
+				Method:  "POST",
+				Handler: Login,
+			},
+		}
+
+		for _, route := range userRoutes {
+			route.AddRoute(userRoute)
+		}
+
+		// ===> API <===
+		// ==> v1 <==
+		apiV1 := app.Group("/v1/")
+		v1APIs := []RouteResource{
+			{
+				Route:   "/",
+				Method:  "POST",
+				Handler: RoutesHandler,
+			},
+		}
+
+		for _, rrApi := range v1APIs {
+			rrApi.AddRoute(apiV1)
+		}
+
 		// ===> Only for Developing <===
-		app.GET("/routes", RoutesHandler)
+		routes := RouteResource{
+			Route:   "/routes",
+			Method:  "GET",
+			Handler: RoutesHandler,
+		}
+
+		routes.AddRoute(app)
 
 		app.Resource("/users", UsersResource{})
 		app.ServeFiles("/", assetsBox) // serve files from the public directory

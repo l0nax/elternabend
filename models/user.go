@@ -6,20 +6,22 @@ import (
 	"github.com/gobuffalo/validate"
 	"github.com/gobuffalo/validate/validators"
 	"github.com/gofrs/uuid"
+	suuid "github.com/google/uuid"
 	"time"
 )
 
 type User struct {
 	ID           uuid.UUID `json:"id" db:"id"`
 	Username     string    `json:"username" db:"username"`
-	PasswordHash string    `json:"password_hash" db:"password_hash"`
+	PasswordHash string    `json:"-" db:"password_hash"`
 	// Salt         string    `json:"salt" db:"salt"`
-	Admin        bool      `json:"admin" db:"admin"`
-	ClassTeacher bool      `json:"class_teacher" db:"class_teacher"`
-	TeacherID    int       `json:"teacher_id" db:"teacher_id"`
-	CreatedAt    time.Time `json:"created_at" db:"created_at"`
-	UpdatedAt    time.Time `json:"updated_at" db:"updated_at"`
-	Password     string    `json:"-" db:"-"`
+	Admin        bool       `json:"-" db:"admin"`         // check if only rw: r
+	ClassTeacher bool       `json:"-" db:"class_teacher"` // check if only rw: r
+	TeacherID    int        `json:"-" db:"teacher_id"`    // check if only rw: r
+	CreatedAt    time.Time  `json:"-" db:"created_at"`    // check if only rw: r
+	UpdatedAt    time.Time  `json:"-" db:"updated_at"`    // check if only rw: r
+	Password     string     `json:"-" db:"-"`
+	SessionID    suuid.UUID `json:"-" db:"-"`
 }
 
 // String is not required by pop and may be deleted
@@ -43,7 +45,6 @@ func (u *User) Validate(tx *pop.Connection) (*validate.Errors, error) {
 	return validate.Validate(
 		&validators.StringIsPresent{Field: u.Username, Name: "Username"},
 		&validators.StringIsPresent{Field: u.Password, Name: "Password"},
-		&validators.StringIsPresent{Field: u.Salt, Name: "Salt"},
 		&validators.IntIsPresent{Field: u.TeacherID, Name: "TeacherID"},
 	), nil
 }

@@ -18,7 +18,7 @@ require (
 	github.com/gobuffalo/suite v2.8.2+incompatible
 	github.com/gobuffalo/validate v2.0.3+incompatible
 	github.com/gofrs/uuid v3.2.0+incompatible
-	github.com/google/uuid v1.1.1 // indirect
+	github.com/google/uuid v1.1.1
 	github.com/jackc/pgconn v1.1.0 // indirect
 	github.com/kgosse/buffalo-mw-rbac v0.0.0-20190127200836-810df2aa61f8
 	github.com/markbates/grift v1.5.0
