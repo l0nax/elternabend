@@ -20,7 +20,7 @@ require (
 	github.com/gofrs/uuid v3.2.0+incompatible
 	github.com/google/uuid v1.1.1
 	github.com/jackc/pgconn v1.1.0 // indirect
-	github.com/kgosse/buffalo-mw-rbac v0.0.0-20190127200836-810df2aa61f8
+	github.com/kgosse/buffalo-mw-rbac v0.0.0-20190127200836-810df2aa61f8 // indirect
 	github.com/markbates/grift v1.5.0
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-isatty v0.0.10 // indirect
