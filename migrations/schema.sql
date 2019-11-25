@@ -38,13 +38,13 @@ ALTER TABLE public.schema_migration OWNER TO postgres;
 CREATE TABLE public.users (
     id uuid NOT NULL,
     username character varying(255) NOT NULL,
-    password character varying(255) NOT NULL,
     salt character varying(255) NOT NULL,
     admin boolean NOT NULL,
     class_teacher boolean NOT NULL,
     teacher_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    password_hash character varying(255) NOT NULL
 );
 
 

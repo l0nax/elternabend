@@ -12,13 +12,14 @@ import (
 type User struct {
 	ID           uuid.UUID `json:"id" db:"id"`
 	Username     string    `json:"username" db:"username"`
-	Password     string    `json:"password" db:"password"`
-	Salt         string    `json:"salt" db:"salt"`
+	PasswordHash string    `json:"password_hash" db:"password_hash"`
+	// Salt         string    `json:"salt" db:"salt"`
 	Admin        bool      `json:"admin" db:"admin"`
 	ClassTeacher bool      `json:"class_teacher" db:"class_teacher"`
 	TeacherID    int       `json:"teacher_id" db:"teacher_id"`
 	CreatedAt    time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at" db:"updated_at"`
+	Password     string    `json:"-" db:"-"`
 }
 
 // String is not required by pop and may be deleted
