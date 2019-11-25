@@ -1,6 +1,7 @@
 package actions
 
 import (
+	"log"
 	"net/http"
 	"strings"
 
@@ -12,7 +13,7 @@ import (
 
 var (
 	// ErrUnauthorized is returned when the user is not allowed to perform a certain action
-	ErrUnauthorized = errors.New("you are unauthorized to perform the requested action")
+	ErrUnauthorized = errors.New("You are unauthorized to perform the requested action")
 	// ErrNotAuthorized is returned when the user is not authorized
 	ErrNotAuthorized = errors.New("you are not authorized, please login!")
 )
@@ -26,16 +27,28 @@ func NewRBACCheckMiddleware(e *casbin.Enforcer) buffalo.MiddlewareFunc {
 				return err
 			}
 
-			res, err := e.EnforceSafe(roles, c.Request().URL.Path, c.Request().Method)
-			if err != nil {
-				return errors.WithStack(err)
+			log.Printf("Found roles: '%v'", roles)
+
+			// remove the last slash from the URI
+			uri := strings.TrimRight(c.Request().URL.Path, "/")
+
+			for _, role := range roles {
+				res, err := e.EnforceSafe(role, uri, c.Request().Method)
+				if err != nil {
+					return errors.Wrap(errors.WithStack(err), "Error while creating Enforcer")
+				}
+
+				// if User is authorized to access the URI return
+				// and break this looph
+				if res {
+					return next(c)
+				}
+
+				log.Printf("Checking group '%s' against URI '%s' with Method '%s'", role, uri, c.Request().Method)
 			}
 
-			// if User is authorized to access the URI return
-			if res {
-				return next(c)
-			}
-
+			// when returning => no role found that has the right
+			// to access the page
 			return c.Error(http.StatusUnauthorized, ErrUnauthorized)
 		}
 	}
@@ -43,16 +56,17 @@ func NewRBACCheckMiddleware(e *casbin.Enforcer) buffalo.MiddlewareFunc {
 
 // getRole returns all roles which the user is assigned to.
 func getRole(c buffalo.Context) ([]string, error) {
-	if user := c.Value("user").(*models.User); user != nil {
+	if user, ok := c.Value("user").(*models.User); ok || user != nil {
 		roles := strings.Split(user.Roles, ",") // user.Roles
 
 		// return 'anonymous' if no roles is declared
 		if len(roles) == 0 {
-			roles[0] = "anonymous"
+			goto anonymous
 		}
 
 		return roles, nil
-
 	}
-	return nil, ErrNotAuthorized
+
+anonymous:
+	return []string{"anonymous"}, nil
 }

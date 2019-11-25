@@ -7,6 +7,7 @@ import (
 	forcessl "github.com/gobuffalo/mw-forcessl"
 	paramlogger "github.com/gobuffalo/mw-paramlogger"
 	"github.com/gobuffalo/pop"
+	"github.com/pkg/errors"
 	"github.com/unrolled/secure"
 
 	"github.com/gobuffalo/buffalo-pop/pop/popmw"
@@ -165,15 +166,17 @@ func SetCurrentUser(next buffalo.Handler) buffalo.Handler {
 		if uuid := c.Session().Get("session_id"); uuid != nil {
 			user := &models.User{}
 			tx := c.Value("tx").(*pop.Connection)
-			err := tx.Find(user, uuid)
-			if err != nil {
-				return err
+
+			if err := tx.Find(user, uuid); err != nil {
+				return errors.WithStack(err)
 			}
-			// TODO: Check if this is really needed!
+
+			// // TODO: Check if this is really needed!
 			c.Set("roles", user.Roles)
 			c.Set("user", user)
 		}
 
+		// skip this if no valid session id was found
 		return next(c)
 	}
 }
