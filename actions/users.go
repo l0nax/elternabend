@@ -1,12 +1,12 @@
 package actions
 
 import (
-	"errors"
 	"fmt"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop"
 	suuid "github.com/google/uuid"
 	"github.com/l0nax/elternabend/models"
+	"github.com/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
@@ -29,7 +29,7 @@ func Login(c buffalo.Context) error {
 	err := c.Bind(&req)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Error while binding Request")
 	}
 
 	pwd := req.Password
