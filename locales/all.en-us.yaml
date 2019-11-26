@@ -90,7 +90,7 @@
 - id: "dashboard.new.tooltip_enddate"
   translation: "From which date the sign up is closed. This describes NOT when the event is finished!"
 - id: "dashboard.new.kill_date"
-  translation: "Delete Date"
+  translation: "Erasure Date"
 - id: "dashboard.new.tooltip_killdate"
   translation: "This Date describes when the Server will clear its database entries."
 - id: "dashboard.new.import_data"
