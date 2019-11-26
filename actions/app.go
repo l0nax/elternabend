@@ -7,8 +7,10 @@ import (
 	forcessl "github.com/gobuffalo/mw-forcessl"
 	paramlogger "github.com/gobuffalo/mw-paramlogger"
 	"github.com/gobuffalo/pop"
+	suuid "github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/unrolled/secure"
+	"log"
 
 	"github.com/gobuffalo/buffalo-pop/pop/popmw"
 	csrf "github.com/gobuffalo/mw-csrf"
@@ -64,13 +66,13 @@ func App() *buffalo.App {
 		// Remove to disable this.
 		app.Use(csrf.New)
 
-		// Check if the User is already authentificated or not
-		app.Use(SetCurrentUser)
-
 		// Wraps each request in a transaction.
 		//  c.Value("tx").(*pop.Connection)
 		// Remove to disable this.
 		app.Use(popmw.Transaction(models.DB))
+
+		// Check if the User is already authentificated or not
+		app.Use(SetCurrentUser)
 
 		// add the authorizer MW
 		app.Use(NewRBACCheckMiddleware(authEnforcer))
@@ -174,11 +176,19 @@ func forceSSL() buffalo.MiddlewareFunc {
 func SetCurrentUser(next buffalo.Handler) buffalo.Handler {
 	return func(c buffalo.Context) error {
 		if uuid := c.Session().Get("session_uuid"); uuid != nil {
+			log.Printf("FOUND: %s", c.Session().Get("session_uuid"))
 			user := &models.User{}
 			tx := c.Value("tx").(*pop.Connection)
+			if tx == nil {
+				return errors.WithStack(errors.New("Error while getting 'tx'. 'tx' is nil"))
+			}
 
-			if err := tx.Find(user, uuid); err != nil {
-				return errors.WithStack(err)
+			_uuid, err := suuid.Parse(uuid.(string))
+			if err != nil {
+				return errors.Wrap(errors.WithStack(err), "Error while converting string UUID into struct")
+			}
+			if err := tx.Where("session_id = ?", _uuid).First(user); err != nil {
+				return errors.Wrap(errors.WithStack(err), "Error while searching UUID of user")
 			}
 
 			// // TODO: Check if this is really needed!

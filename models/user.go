@@ -15,12 +15,12 @@ import (
 )
 
 type User struct {
-	ID           uuid.UUID  `json:"id" db:"id"`
-	Username     string     `json:"username" db:"username"`
+	ID           uuid.UUID  `json:"id" db:"id" rw:"r"`
+	Username     string     `json:"username" db:"username" rw:"r"`
 	PasswordHash string     `json:"-" db:"password_hash"`
 	ClassTeacher bool       `json:"-" db:"class_teacher"` // check if only rw: r
 	Roles        string     `json:"-" db:"roles"`         // a comma seperated list of all roles
-	SessionID    suuid.UUID `json:"-" db:"session_id"`
+	SessionID    suuid.UUID `json:"session_id" db:"session_id"`
 	Password     string     `json:"password" db:"-"` // this field is for (eg) the Users/Edit or Users/Create site
 	Email        string     `json:"email" db:"email"`
 }

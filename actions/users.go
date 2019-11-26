@@ -66,12 +66,13 @@ func Login(c buffalo.Context) error {
 
 	// the User ID should NOT be used as Session ID because when it's leaked
 	// the User needs to be re-created.
-	c.Session().Clear()
+	// c.Session().Clear()
 	user.SessionID = suuid.New()
-	c.Session().Set("session_uuid", user.SessionID)
+	c.Session().Set("session_uuid", user.SessionID.String())
 	c.Flash().Add("success", "Welcome back!")
 
 	// write Session ID to DB
+	log.Printf("==> %v", user)
 	err = tx.Update(user)
 	if err != nil {
 		return err
