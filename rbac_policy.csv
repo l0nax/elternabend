@@ -1,4 +1,8 @@
 p, admin, /*, *
+
+p, class_teacher, /d, GET
+p, class_teacher, /d, POST
+
 p, anonymous, /, GET
 p, anonymous, /u/login, GET
 p, anonymous, /u/login, POST
