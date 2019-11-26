@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.14
--- Dumped by pg_dump version 10.9 (Ubuntu 10.9-0ubuntu0.18.10.1)
+-- Dumped from database version 11.4 (Debian 11.4-1.pgdg90+1)
+-- Dumped by pg_dump version 11.5
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -15,20 +15,6 @@ SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
-
---
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
 
 SET default_tablespace = '';
 
@@ -53,13 +39,11 @@ CREATE TABLE public.users (
     id uuid NOT NULL,
     username character varying(255) NOT NULL,
     salt character varying(255) NOT NULL,
-    admin boolean NOT NULL,
     class_teacher boolean NOT NULL,
-    teacher_id integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
     password_hash character varying(255) NOT NULL,
-    email character varying(255) NOT NULL
+    email character varying(255) NOT NULL,
+    roles character varying(255) NOT NULL,
+    session_id uuid NOT NULL
 );
 
 

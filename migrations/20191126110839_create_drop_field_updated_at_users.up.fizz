@@ -1,0 +1,4 @@
+drop_column("users", "updated_at")
+drop_column("users", "created_at")
+drop_column("users", "admin")
+drop_column("users", "teacher_id")
