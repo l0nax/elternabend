@@ -2,7 +2,7 @@ package models
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
 	"time"
 
 	"github.com/gobuffalo/pop"
@@ -24,7 +24,7 @@ type User struct {
 	TeacherID    int        `json:"-" db:"teacher_id"`    // check if only rw: r
 	CreatedAt    time.Time  `json:"-" db:"created_at"`    // check if only rw: r
 	UpdatedAt    time.Time  `json:"-" db:"updated_at"`    // check if only rw: r
-	Roles        []string   `json:"-" db:"roles"`         // a comma seperated list of all roles
+	Roles        string     `json:"-" db:"roles"`         // a comma seperated list of all roles
 	SessionID    suuid.UUID `json:"-" db:"session_uuid"`
 	Password     string     `json:"-" db:"-"`
 	Email        string     `json:"email" db:"email"`
@@ -55,12 +55,17 @@ func (u *User) Create(tx *pop.Connection) (*validate.Errors, error) {
 	// check set'ed roles
 	if len(u.Roles) == 0 {
 		// set – as default – 'class_teacher' as role
-		u.Roles = []string{"class_teacher"}
+		u.Roles = "class_teacher"
 	}
 
-	// check if Field 'admin' is true, if so add 'admin' role to roels
+	// check if Field 'admin' is true, if so add 'admin' role to roles
 	if u.Admin {
-		u.Roles = append(u.Roles, "admin")
+		_preRole := ""
+		if len(u.Roles) == 0 {
+			_preRole = ","
+		}
+
+		u.Roles += _preRole + "admin"
 	}
 
 	// hash Password
@@ -79,7 +84,6 @@ func (u *User) Validate(tx *pop.Connection) (*validate.Errors, error) {
 	return validate.Validate(
 		&validators.StringIsPresent{Field: u.Username, Name: "Username"},
 		&validators.StringIsPresent{Field: u.Password, Name: "PasswordHash"},
-		&validators.StringIsPresent{Field: u.Roles, Name: "Roles"}
 		&UsernameNotTaken{Name: "Username", Field: u.Username, tx: tx},
 		&EmailNotTaken{Name: "Email", Field: u.Email, tx: tx},
 	), nil
@@ -114,7 +118,7 @@ func (v *UsernameNotTaken) IsValid(errors *validate.Errors) {
 	err := query.First(&queryUser)
 	if err == nil {
 		// found a user with same username
-		errors.Add(validators.GenerateKey(v.Name), log.Printf("The username %s is not available.", v.Field))
+		errors.Add(validators.GenerateKey(v.Name), fmt.Sprintf("The username %s is not available.", v.Field))
 	}
 }
 

@@ -29,8 +29,18 @@ func NewRBACCheckMiddleware(e *casbin.Enforcer) buffalo.MiddlewareFunc {
 
 			log.Printf("Found roles: '%v'", roles)
 
-			// remove the last slash from the URI
-			uri := strings.TrimRight(c.Request().URL.Path, "/")
+			// remove the last slash from the URI only if len(str) > 1
+			var uri string
+			if len(c.Request().URL.Path) > 1 {
+				uri = strings.TrimRight(c.Request().URL.Path, "/")
+			} else {
+				// append '/' if  URI == ''
+				if len(c.Request().URL.Path) == 0 {
+					uri = "/"
+				} else {
+					uri = c.Request().URL.Path
+				}
+			}
 
 			for _, role := range roles {
 				res, err := e.EnforceSafe(role, uri, c.Request().Method)
