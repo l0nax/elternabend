@@ -183,7 +183,7 @@ func SetCurrentUser(next buffalo.Handler) buffalo.Handler {
 
 			// // TODO: Check if this is really needed!
 			c.Set("roles", user.Roles)
-			// c.Set("user", user)
+			c.Set("user", user)
 		}
 
 		// skip this if no valid session id was found
