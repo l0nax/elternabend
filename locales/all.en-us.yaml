@@ -45,22 +45,22 @@
   translation: "This Website helps to get the Parents Evening organized."
 
 
-- id: "user.created.success"
+- id: user.created.success
   translation: "User was successfully created."
-- id: "user.updated.success"
+- id: user.updated.success
   translation: "User was successfully updated."
-- id: "user.destroyed.success"
+- id: user.destroyed.success
   translation: "User was successfully destroyed."
-- id: "user.new.title"
+- id: user.new.title
   translation: "Create new User"
-- id: "user.new.btn_create"
+- id: user.new.btn_create
   translation: "Create"
-- id: "user.new.mail"
+- id: user.new.mail
   translation: "Email address"
-- id: "user.new.username"
+- id: user.new.username
   translation: "Username"
-- id: "user.new.password"
+- id: user.new.password
   translation: "Password"
-- id: "user.new.admin"
+- id: user.new.admin
   translation: "Is Admin"
 
