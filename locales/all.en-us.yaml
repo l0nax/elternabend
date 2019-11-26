@@ -75,3 +75,6 @@
 - id: user.new.admin
   translation: "Is Admin"
 
+
+- id: "feature_future"
+  translation: "This Feature will be implemented in the future"

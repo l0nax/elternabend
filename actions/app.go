@@ -82,6 +82,30 @@ func App() *buffalo.App {
 
 		app.GET("/", HomeHandler)
 
+		// ===> Dashboard <===
+		dashboardRoute := app.Group("/d/")
+		dashboardRoutes := []RouteResource{
+			{
+				"/",
+				"GET",
+				Dashboard,
+			},
+			{
+				"/new",
+				"GET",
+				CreateEvent,
+			},
+			{
+				"/new",
+				"GET",
+				CreateEventPost,
+			},
+		}
+
+		for _, route := range dashboardRoutes {
+			route.AddRoute(dashboardRoute)
+		}
+
 		// ===> Auth/ User <===
 		userRoute := app.Group("/u/")
 		userRoutes := []RouteResource{
