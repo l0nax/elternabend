@@ -3,7 +3,7 @@ package models
 import (
 	"encoding/json"
 	"fmt"
-	"time"
+	"log"
 
 	"github.com/gobuffalo/pop"
 	"github.com/gobuffalo/validate"
@@ -15,18 +15,13 @@ import (
 )
 
 type User struct {
-	ID           uuid.UUID `json:"id" db:"id"`
-	Username     string    `json:"username" db:"username"`
-	PasswordHash string    `json:"-" db:"password_hash"`
-	// Salt         string    `json:"salt" db:"salt"`
-	Admin        bool       `json:"-" db:"admin"`         // check if only rw: r
+	ID           uuid.UUID  `json:"id" db:"id"`
+	Username     string     `json:"username" db:"username"`
+	PasswordHash string     `json:"-" db:"password_hash"`
 	ClassTeacher bool       `json:"-" db:"class_teacher"` // check if only rw: r
-	TeacherID    int        `json:"-" db:"teacher_id"`    // check if only rw: r
-	CreatedAt    time.Time  `json:"-" db:"created_at"`    // check if only rw: r
-	UpdatedAt    time.Time  `json:"-" db:"updated_at"`    // check if only rw: r
 	Roles        string     `json:"-" db:"roles"`         // a comma seperated list of all roles
-	SessionID    suuid.UUID `json:"-" db:"session_uuid"`
-	Password     string     `json:"-" db:"-"`
+	SessionID    suuid.UUID `json:"-" db:"session_id"`
+	Password     string     `json:"password" db:"-"` // this field is for (eg) the Users/Edit or Users/Create site
 	Email        string     `json:"email" db:"email"`
 }
 
@@ -58,23 +53,17 @@ func (u *User) Create(tx *pop.Connection) (*validate.Errors, error) {
 		u.Roles = "class_teacher"
 	}
 
-	// check if Field 'admin' is true, if so add 'admin' role to roles
-	if u.Admin {
-		_preRole := ""
-		if len(u.Roles) == 0 {
-			_preRole = ","
-		}
-
-		u.Roles += _preRole + "admin"
-	}
-
+	log.Printf("Hashing Password")
 	// hash Password
-	pwdHash, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.MaxCost)
+	pwdHash, err := bcrypt.GenerateFromPassword([]byte(u.Password), (bcrypt.MaxCost / 2))
 	if err != nil {
+		log.Printf("[ERROR] Error while hashing Password: %s", err.Error())
 		return validate.NewErrors(), errors.Wrap(err, "Error while hashing Password: ")
 	}
 
-	u.Password = string(pwdHash)
+	log.Printf("Password hashed: '%s'", string(pwdHash))
+
+	u.PasswordHash = string(pwdHash)
 	return tx.ValidateAndCreate(u)
 }
 
@@ -84,8 +73,8 @@ func (u *User) Validate(tx *pop.Connection) (*validate.Errors, error) {
 	return validate.Validate(
 		&validators.StringIsPresent{Field: u.Username, Name: "Username"},
 		&validators.StringIsPresent{Field: u.Password, Name: "PasswordHash"},
-		&UsernameNotTaken{Name: "Username", Field: u.Username, tx: tx},
-		&EmailNotTaken{Name: "Email", Field: u.Email, tx: tx},
+		// &UsernameNotTaken{Name: "Username", Field: u.Username, tx: tx},
+		// &EmailNotTaken{Name: "Email", Field: u.Email, tx: tx},
 	), nil
 }
 
@@ -93,8 +82,8 @@ func (u *User) Validate(tx *pop.Connection) (*validate.Errors, error) {
 // This method is not required and may be deleted.
 func (u *User) ValidateCreate(tx *pop.Connection) (*validate.Errors, error) {
 	return validate.Validate(
-		&UsernameNotTaken{Name: "Username", Field: u.Username, tx: tx},
-		&EmailNotTaken{Name: "Email", Field: u.Email, tx: tx},
+	// &UsernameNotTaken{Name: "Username", Field: u.Username, tx: tx},
+	// &EmailNotTaken{Name: "Email", Field: u.Email, tx: tx},
 	), nil
 }
 

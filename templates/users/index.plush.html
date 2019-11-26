@@ -24,10 +24,8 @@
       <tr>
       <td><%= user.Username %></td>
         <td><%= user.Password %></td>
-        <td><%= user.Salt %></td>
-        <td><%= user.Admin %></td>
+        <td><%= user.Email %></td>
         <td><%= user.ClassTeacher %></td>
-        <td><%= user.TeacherID %></td>
         <td>
           <div class="pull-right">
             <%= linkTo(userPath({ user_id: user.ID }), {class: "btn btn-info", body: "View"}) %>
