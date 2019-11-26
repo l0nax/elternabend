@@ -44,6 +44,14 @@
 - id: index_Description
   translation: "This Website helps to get the Parents Evening organized."
 
+- id: username
+  translation: "Username"
+
+- id: roles
+  translation: "Roles"
+
+- id: save
+  translation: "Save"
 
 - id: user.created.success
   translation: "User was successfully created."

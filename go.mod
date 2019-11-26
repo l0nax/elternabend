@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/casbin/casbin v1.9.1
-	github.com/gobuffalo/buffalo v0.15.1
+	github.com/gobuffalo/buffalo v0.15.0
 	github.com/gobuffalo/buffalo-pop v1.23.1
 	github.com/gobuffalo/envy v1.8.1
 	github.com/gobuffalo/mw-csrf v0.0.0-20190129204204-25460a055517

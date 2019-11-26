@@ -173,7 +173,7 @@ func forceSSL() buffalo.MiddlewareFunc {
 // in the session. If one is found it is set on the context.
 func SetCurrentUser(next buffalo.Handler) buffalo.Handler {
 	return func(c buffalo.Context) error {
-		if uuid := c.Session().Get("session_id"); uuid != nil {
+		if uuid := c.Session().Get("session_uuid"); uuid != nil {
 			user := &models.User{}
 			tx := c.Value("tx").(*pop.Connection)
 
@@ -183,7 +183,7 @@ func SetCurrentUser(next buffalo.Handler) buffalo.Handler {
 
 			// // TODO: Check if this is really needed!
 			c.Set("roles", user.Roles)
-			c.Set("user", user)
+			// c.Set("user", user)
 		}
 
 		// skip this if no valid session id was found

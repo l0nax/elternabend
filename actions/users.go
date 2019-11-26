@@ -20,7 +20,7 @@ type LoginRequest struct {
 
 // NewLogin shows a User the LogIn Page
 func NewLogin(c buffalo.Context) error {
-	c.Set("user", models.User{})
+	// c.Set("user", models.User{})
 	return c.Render(http.StatusOK, r.HTML("users/login.plush.html"))
 }
 
@@ -29,7 +29,6 @@ func NewLogin(c buffalo.Context) error {
 func Login(c buffalo.Context) error {
 	var req LoginRequest
 	err := c.Bind(&req)
-
 	if err != nil {
 		return errors.Wrap(err, "Error while binding Request")
 	}
@@ -60,9 +59,9 @@ func Login(c buffalo.Context) error {
 	}
 
 	// compare Passwords
-	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(user.Password))
+	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(pwd))
 	if err != nil {
-		return c.Error(http.StatusForbidden, errors.New("Invalid credentials"))
+		return c.Error(http.StatusForbidden, errors.Wrap(err, "Invalid credentials"))
 	}
 
 	// the User ID should NOT be used as Session ID because when it's leaked
@@ -79,7 +78,9 @@ func Login(c buffalo.Context) error {
 	}
 
 	// return c.Render(200, r.)
-	return c.Redirect(http.StatusTemporaryRedirect, "/")
+	// return c.Redirect(http.StatusTemporaryRedirect, "/")
+	// return c.Render(http.StatusOK, r.HTML("index"))
+	return c.Redirect(302, "/")
 }
 
 // LogOut logs an User out and deletes all the session informations

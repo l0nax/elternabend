@@ -35,11 +35,11 @@ func NewRBACCheckMiddleware(e *casbin.Enforcer) buffalo.MiddlewareFunc {
 				uri = strings.TrimRight(c.Request().URL.Path, "/")
 			} else {
 				// append '/' if  URI == ''
-				if len(c.Request().URL.Path) == 0 {
-					uri = "/"
-				} else {
-					uri = c.Request().URL.Path
-				}
+				// if len(c.Request().URL.Path) == 0 {
+				//         uri = "/"
+				// } else {
+				uri = c.Request().URL.Path
+				// }
 			}
 
 			for _, role := range roles {
