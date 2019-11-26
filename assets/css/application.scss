@@ -1,7 +1,13 @@
 @import "~bootstrap/scss/bootstrap.scss";
+@import "~bootstrap/scss/_dropdown.scss";
+@import "~bootstrap/scss/bootstrap-grid.scss";
+@import "~bootstrap/scss/bootstrap-reboot.scss";
+@import "~bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css";
 @import "~@fortawesome/fontawesome-free/css/all.min.css";
+@import "~bootstrap/scss/_input-group.scss";
 
 @import "buffalo";
+@import "_datetimepicker";
 
 $background_color_1: #f5f5f5;
 .footer {

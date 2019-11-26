@@ -1,0 +1,84 @@
+<br/><br/>
+
+<div class="container">
+<form method="POST" action="<%= newDPath() %>">
+        <input name="authenticity_token" type="hidden" value="<%= authenticity_token %>" />
+
+        <div class="form-group col-sm-6 date" id="start_datepicker">
+                <label for="input-startdate"><%= t("dashboard.new.start_date") %></label>
+                <div class="input-group">
+                        <input class="form-control" aria-describedby="startDateHelph" type="text" name="input-startdate" id="input-startdate" />
+                        <div class="input-group-append">
+                                <span class="input-group-text"><i class="far fa-calendar-alt" aria-hidden="true"></i></span>
+                        </div>
+                </div>
+                <small id="startDateHelp" class="form-text text-muted"><%= t("dashboard.new.tooltip_startdate") %></small>
+        </div>
+
+        <div class="form-group col-sm-6 date" id="end_datepicker">
+                <label for="input-enddate"><%= t("dashboard.new.end_date") %></label>
+                <div class="input-group">
+                        <input class="form-control" aria-describedby="endDateHelph" type="text" name="input-enddate" id="input-enddate" />
+                        <div class="input-group-append">
+                                <span class="input-group-text"><i class="far fa-calendar-alt" aria-hidden="true"></i></span>
+                        </div>
+                </div>
+                <small id="endDateHelp" class="form-text text-muted"><%= t("dashboard.new.tooltip_enddate") %></small>
+        </div>
+
+        <div class="form-group col-sm-6 mb-3 date" id="kill_datepicker">
+                <label for="input-killdate"><%= t("dashboard.new.kill_date") %></label>
+                <div class="input-group">
+                        <input class="form-control" aria-describedby="killDateHelph" type="text" name="input-killdate" id="input-killdate" />
+                        <div class="input-group-append">
+                                <span class="input-group-text"><i class="far fa-calendar-alt" aria-hidden="true"></i></span>
+                        </div>
+                </div>
+                <small id="killDateHelp" class="form-text text-muted"><%= t("dashboard.new.tooltip_killdate") %></small>
+        </div>
+
+
+        <div class="form-group col-sm-6 mb-3 date" id="import_data">
+                <label for="input-killdate"><%= t("dashboard.new.import_data") %></label>
+                <div class="input-group">
+                        <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="input-file"/>
+                                <label class="custom-file-label" for="input-file"><%= t("dashboard.new.importdata_browse") %></label>
+                        </div>
+                        <div class="input-group-append">
+                                <button id="import_btn" class="btn btn-outline-secondary input-group-text"><%= t("dashboard.new.importdata_upload-parse") %></button>
+                        </div>
+                </div>
+                <small id="killDateHelp" class="form-text text-muted"><%= t("dashboard.new.tooltip_importdata") %></small>
+        </div>
+
+
+        <button type="submit" class="col-lg-2 col-md-2 col-sm-2 btn btn-primary btn-block"><%= t("submit") %></button>
+</form>
+</div>
+
+<script charset="utf-8">
+        $(function() {
+                $('#import_btn').on('click', function(event) {
+                        // prevent following the link
+                        event.preventDefault();
+
+                        // check if file was uploaded
+                        if(document.getElementById("input-file").value != "") {
+                                // upload file to API
+
+                                // check if everything is OK
+
+                        }
+                });
+                $('#input-startdate').datetimepicker({
+                        format: 'yyyy-mm-dd hh:ii'
+                });
+                $('#input-enddate').datetimepicker({
+                        format: 'yyyy-mm-dd hh:ii'
+                });
+                $('#input-killdate').datetimepicker({
+                        format: 'yyyy-mm-dd hh:ii'
+                });
+        });
+</script>

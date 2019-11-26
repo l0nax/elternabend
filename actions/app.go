@@ -97,7 +97,7 @@ func App() *buffalo.App {
 			},
 			{
 				"/new",
-				"GET",
+				"POST",
 				CreateEventPost,
 			},
 		}
@@ -164,7 +164,6 @@ func App() *buffalo.App {
 
 		routes.AddRoute(app)
 
-		app.Resource("/users", UsersResource{})
 		app.ServeFiles("/", assetsBox) // serve files from the public directory
 	}
 

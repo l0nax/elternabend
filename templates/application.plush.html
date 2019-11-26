@@ -8,6 +8,7 @@
     <meta name="csrf-param" content="authenticity_token" />
     <meta name="csrf-token" content="<%= authenticity_token %>" />
     <link rel="icon" href="<%= assetPath("images/favicon.ico") %>">
+    <%= javascriptTag("application.js") %>
   </head>
   <body>
         <%= partial("menu.html") %>
@@ -21,6 +22,5 @@
                 <%= partial("footer.html") %>
         </footer>
 
-    <%= javascriptTag("application.js") %>
   </body>
 </html>
