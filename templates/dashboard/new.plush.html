@@ -42,21 +42,23 @@
                 <label for="input-killdate"><%= t("dashboard.new.import_data") %></label>
                 <div class="input-group">
                         <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="input-file"/>
+                                <input type="file" class="custom-file-input" id="input-file" accept="csv"/>
                                 <label class="custom-file-label" for="input-file"><%= t("dashboard.new.importdata_browse") %></label>
                         </div>
                         <div class="input-group-append">
-                                <button id="import_btn" class="btn btn-outline-secondary input-group-text"><%= t("dashboard.new.importdata_upload-parse") %></button>
+                                <button id="import_btn" class="bs-btn bs-btn-secondary input-group-text"><%= t("dashboard.new.importdata_upload-parse") %></button>
                         </div>
                 </div>
                 <small id="killDateHelp" class="form-text text-muted"><%= t("dashboard.new.tooltip_importdata") %></small>
         </div>
 
 
-        <button type="submit" class="col-lg-2 col-md-2 col-sm-2 btn btn-primary btn-block"><%= t("submit") %></button>
+        <button type="submit" class="col-lg-2 col-md-2 col-sm-2 bs-btn bs-btn-primary bs-btn-block"><%= t("submit") %></button>
 </form>
 </div>
 
+
+<script src="/assets/js/dashboard.js" charset="utf-8"></script>
 <script charset="utf-8">
         $(function() {
                 $('#import_btn').on('click', function(event) {
@@ -65,10 +67,22 @@
 
                         // check if file was uploaded
                         if(document.getElementById("input-file").value != "") {
-                                // upload file to API
+                                // upload file
+                                var data = null;
+                                var file = event.target.files[0];
+                                var reader = new FileReader();
+                                reader.readAsText(file);
+                                reader.onload = function(event) {
+                                        var csvData = event.target.result;
+                                        var paredData = parseNewCSV(csvData);
 
-                                // check if everything is OK
+                                        // now we create all the needed Data for the event
+                                        processNewCSV(parsedData['data']);
+                                }
 
+                                reader.onerror = function() {
+                                        alert("Unable to parse and process the CSV file: " + file.fileName);
+                                }
                         }
                 });
                 $('#input-startdate').datetimepicker({
