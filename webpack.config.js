@@ -11,6 +11,7 @@ const configurator = {
   entries: function(){
     var entries = {
       application: [
+        './node_modules/mdbootstrap/scss/mdb-free.scss',
         './node_modules/jquery-ujs/src/rails.js',
         './assets/css/application.scss',
       ],
@@ -52,6 +53,14 @@ const configurator = {
   moduleOptions: function() {
     return {
       rules: [
+        {
+          test: /\.(png|jpe?g|gif)$/i,
+          use: [
+            {
+              loader: 'file-loader',
+            },
+          ],
+        },
         {
           test: /\.s[ac]ss$/,
           use: [
