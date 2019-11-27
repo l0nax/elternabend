@@ -10,6 +10,7 @@
   "repository": "github.com/gobuffalo/buffalo",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.8.1",
+    "@types/popper.js": "^1.11.0",
     "bootstrap": "4.3.1",
     "bootstrap-datepicker": "^1.9.0",
     "bootstrap-datetime-picker": "^2.4.4",
