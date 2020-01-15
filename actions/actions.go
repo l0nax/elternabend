@@ -21,7 +21,7 @@ type RouteResource struct {
 	Method string
 	// Handler contains the function which will handle the request
 	Handler func(c buffalo.Context) error
-	// 
+	//
 }
 
 func (r *RouteResource) AddRoute(app *buffalo.App) *buffalo.RouteInfo {
