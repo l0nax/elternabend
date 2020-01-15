@@ -20,6 +20,7 @@
 
 set -o nounset                              # Treat unset variables as an error
 
+DOCKER_CONTENT_TRUST=0
 docker pull postgres:9.5
 
 docker run --rm -d \
