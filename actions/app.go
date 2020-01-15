@@ -155,6 +155,20 @@ func App() *buffalo.App {
 			rrApi.AddRoute(apiV1)
 		}
 
+		// Teacher API
+		apiV1_teacher := apiV1.Group("/teacher")
+		apiV1_teachers := []RouteResource{
+			{
+				"/new",
+				"CREATE",
+				TeacherCreate,
+			},
+		}
+
+		for _, rrApi := range apiV1_teachers {
+			rrApi.AddRoute(apiV1_teacher)
+		}
+
 		// ===> Only for Developing <===
 		routes := RouteResource{
 			Route:   "/routes",
@@ -164,7 +178,6 @@ func App() *buffalo.App {
 
 		routes.AddRoute(app)
 
-		app.Resource("/teachers", TeachersResource{})
 		app.ServeFiles("/", assetsBox) // serve files from the public directory
 	}
 
