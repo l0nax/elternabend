@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 11.4 (Debian 11.4-1.pgdg90+1)
+-- Dumped from database version 9.5.20
 -- Dumped by pg_dump version 11.5
 
 SET statement_timeout = 0;
@@ -38,6 +38,7 @@ ALTER TABLE public.schema_migration OWNER TO postgres;
 CREATE TABLE public.users (
     id uuid NOT NULL,
     username character varying(255) NOT NULL,
+    salt character varying(255) NOT NULL,
     class_teacher boolean NOT NULL,
     password_hash character varying(255) NOT NULL,
     email character varying(255) NOT NULL,
@@ -61,6 +62,16 @@ ALTER TABLE ONLY public.users
 --
 
 CREATE UNIQUE INDEX schema_migration_version_idx ON public.schema_migration USING btree (version);
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --
