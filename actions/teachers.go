@@ -2,6 +2,8 @@ package actions
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop"
 	"github.com/l0nax/elternabend/models"
@@ -82,8 +84,17 @@ func TeacherCreate(c buffalo.Context) error {
 		return fmt.Errorf("no transaction found")
 	}
 
-	// Validate the data from the html form
-	verrs, err := tx.ValidateAndCreate(teacher)
+	// we have first to create an new User which we can then connect
+	// with the new Teacher
+	tUser := models.User{
+		Username:     c.Request().FormValue("email"),
+		Email:        c.Request().FormValue("email"),
+		ClassTeacher: true,
+		Roles:        "class_teacher",
+	}
+
+	// validate and create new User
+	verrs, err := tx.ValidateAndCreate(tUser)
 	if err != nil {
 		return err
 	}
@@ -92,7 +103,31 @@ func TeacherCreate(c buffalo.Context) error {
 		// Make the errors available inside the html template
 		c.Set("errors", verrs)
 
-		// Render again the new.html template that the user can
+		// Render again the template that the user can
+		// correct the input.
+		return c.Render(422, r.Auto(c, teacher))
+	}
+
+	// add UserID
+	teacher.UserID = teacher.UserID
+
+	// Validate the data from the html form
+	verrs, err = tx.ValidateAndCreate(teacher)
+	if err != nil {
+		return err
+	}
+
+	if verrs.HasAny() {
+		// delete the new created User
+		err = tUser.Destroy(tx)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// Make the errors available inside the html template
+		c.Set("errors", verrs)
+
+		// Render again the template that the user can
 		// correct the input.
 		return c.Render(422, r.Auto(c, teacher))
 	}
@@ -189,3 +224,7 @@ func TeacherDetroy(c buffalo.Context) error {
 	// Redirect to the teachers index page
 	return c.Render(200, r.Auto(c, teacher))
 }
+
+// =====================================
+//	Package internal functions
+// =====================================
