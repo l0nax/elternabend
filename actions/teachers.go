@@ -65,12 +65,6 @@ func TeacherShow(c buffalo.Context) error {
 	return c.Render(200, r.Auto(c, teacher))
 }
 
-// TeacherNew renders the form for creating a new Teacher.
-// This function is mapped to the path GET /teacher/new
-func TeacherNew(c buffalo.Context) error {
-	return c.Render(200, r.Auto(c, &models.Teacher{}))
-}
-
 // Create adds a Teacher to the DB. This function is mapped to the
 // path CREATE /teacher
 func TeacherCreate(c buffalo.Context) error {
