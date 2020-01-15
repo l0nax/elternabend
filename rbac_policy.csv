@@ -1,5 +1,6 @@
 p, admin, /*, *
 
+p, class_teacher, /, GET
 p, class_teacher, /d, GET
 p, class_teacher, /d, POST
 
@@ -9,4 +10,3 @@ p, anonymous, /u/login, POST
 p, anonymous, /routes/, GET
 
 
-p, anonymous, /*, *
