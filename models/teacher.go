@@ -7,10 +7,13 @@ import (
 	"github.com/gofrs/uuid"
 	"time"
 )
+
 type Teacher struct {
-    ID uuid.UUID `json:"id" db:"id"`
-    CreatedAt time.Time `json:"created_at" db:"created_at"`
-    UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
+	ID        uuid.UUID `json:"id" db:"id" rw:"r"`
+	UserID    uuid.UUID `json:"-" db:"uid" rw:"r"`
+	Name      string    `json:"name" db:"name" rw:"w"`
+	CreatedAt time.Time `json:"created_at" db:"created_at"`
+	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
 }
 
 // String is not required by pop and may be deleted
