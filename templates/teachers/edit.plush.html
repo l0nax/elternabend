@@ -1,0 +1,8 @@
+<div class="page-header">
+  <h1>Edit Teacher</h1>
+</div>
+
+<%= formFor(teacher, {action: teacherPath({ teacher_id: teacher.ID }), method: "PUT"}) { %>
+  <%= partial("teachers/form.html") %>
+  <%= linkTo(teacherPath({ teacher_id: teacher.ID }), {class: "btn btn-warning", "data-confirm": "Are you sure?", body: "Cancel"}) %>
+<% } %>

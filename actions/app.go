@@ -164,6 +164,7 @@ func App() *buffalo.App {
 
 		routes.AddRoute(app)
 
+		app.Resource("/teachers", TeachersResource{})
 		app.ServeFiles("/", assetsBox) // serve files from the public directory
 	}
 
