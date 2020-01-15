@@ -16,7 +16,7 @@
     "bootstrap-datetime-picker": "^2.4.4",
     "jquery": "~3.4.1",
     "jquery-ujs": "~1.2.2",
-    "mdbootstrap": "^4.11.0",
+    "mdbootstrap": "^4.10.0",
     "papaparse": "^5.1.1",
     "popper.js": "^1.14.4"
   },
