@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/gobuffalo/pop"
 	"github.com/gobuffalo/validate"
@@ -38,6 +39,34 @@ type Users []User
 func (u Users) String() string {
 	ju, _ := json.Marshal(u)
 	return string(ju)
+}
+
+// Destroy deletes a User from the Database
+// NOTE: This function does NOT check if any relations exists!
+func (u *User) Destroy(tx *pop.Connection) error {
+	// reject deleting Admin Users
+	if len(u.Roles) != 0 {
+		// check if one of the roles is 'admin'
+		roles := strings.Split(u.Roles, ",")
+		isAdmin := false
+
+		for _, v := range roles {
+			if v == "admin" {
+				isAdmin = true
+				break
+			}
+		}
+
+		if isAdmin {
+			log.Printf("[ERROR] Can not delete Users which have 'admin' role! (%s)\n",
+				u.Username)
+			return errors.New("Can not delete Administrators!")
+		}
+	}
+
+	log.Printf("[INFO] Deleting User '%s'\n", u.Username)
+
+	return tx.Destroy(u)
 }
 
 // Create creates a new User and adds it to the Database
