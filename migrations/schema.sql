@@ -38,7 +38,6 @@ ALTER TABLE public.schema_migration OWNER TO postgres;
 CREATE TABLE public.users (
     id uuid NOT NULL,
     username character varying(255) NOT NULL,
-    salt character varying(255) NOT NULL,
     class_teacher boolean NOT NULL,
     password_hash character varying(255) NOT NULL,
     email character varying(255) NOT NULL,
