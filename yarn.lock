@@ -3131,10 +3131,10 @@ md5.js@^1.3.4:
     inherits "^2.0.1"
     safe-buffer "^5.1.2"
 
-mdbootstrap@^4.10.0:
-  version "4.11.0"
-  resolved "https://registry.yarnpkg.com/mdbootstrap/-/mdbootstrap-4.11.0.tgz#c54f0c545efda93561d62715237574f3505ee545"
-  integrity sha512-3yhRRo8UQDqRgeEutSpx9jIECzkyPebOq/oYsG2TLAmXVmujDBb+OoTW6+yZ1MtaQZCu8AF8D1/pM9Y8sLj3uA==
+mdbootstrap@~4.10.0:
+  version "4.10.1"
+  resolved "https://www.fabmation.info/artifact/api/npm/npm/mdbootstrap/-/mdbootstrap-4.10.1.tgz#d99a2c9a01686a29ae90899ba5f0b9bc9591c9b3"
+  integrity sha1-2ZosmgFoaimukImbpfC5vJWRybM=
 
 mem@^4.0.0:
   version "4.3.0"
