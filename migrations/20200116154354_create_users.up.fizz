@@ -1,3 +1,2 @@
-// drop 'salt' field of 'users' table because it will be implemented later
 drop_column("users", "salt")
 
