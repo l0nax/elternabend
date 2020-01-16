@@ -241,7 +241,7 @@ func (v UsersResource) Create(c buffalo.Context) error {
 	// Validate the data from the html form
 	verrs, err := tx.ValidateAndCreate(user)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Error while validating and creating User")
 	}
 
 	if verrs.HasAny() {
