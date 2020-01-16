@@ -1,0 +1,2 @@
+drop_column("teachers", "uid", "uuid")
+drop_column("teachers", "name", "string")
