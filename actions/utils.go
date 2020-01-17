@@ -36,7 +36,7 @@ func RandomString(length int) string {
 		"0123456789"
 	charsLen := len(chars)
 
-	var randString []byte
+	randString := make([]byte, length)
 
 	// add Chars
 	for i := 0; i < length; i++ {
