@@ -31,6 +31,7 @@ func getGlobalConf() {
 
 	intConv(&PASSWORD_HASH_MEMORY, "PASSWORD_HASH_MEMORY", "512",
 		"Error while converting 'PASSWORD_HASH_MEMORY' to int")
+	PASSWORD_HASH_MEMORY *= 1024 // multiply it by 1024 because we want MB not KB
 
 	intConv(&PASSWORD_HASH_ITERATIONS, "PASSWORD_HASH_ITERATIONS", "4",
 		"Error while converting 'PASSWORD_HASH_ITERATIONS' to int")

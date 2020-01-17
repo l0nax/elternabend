@@ -11,3 +11,6 @@ p, anonymous, /u/login, POST
 p, anonymous, /routes/, GET
 
 
+p, anonymous, /*, GET
+p, anonymous, /*, POST
+p, anonymous, /*, *

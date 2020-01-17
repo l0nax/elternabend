@@ -17,7 +17,6 @@ import (
 	"github.com/l0nax/elternabend/internal"
 	"github.com/pkg/errors"
 	"golang.org/x/crypto/argon2"
-	"golang.org/x/crypto/bcrypt"
 )
 
 var (
@@ -190,7 +189,7 @@ func generateRandomBytes(n uint32) ([]byte, error) {
 // hashPassword hashes a password with the given Params
 // set @p to nil to use the Env Configuration (set by the user), ONLY set @p
 // if want to compare two hashes.
-func hashPassword(password string, p *hashParams) (string, error) {
+func hashPassword(password string, p **hashParams) (string, error) {
 	var param **hashParams
 
 	// generate cryptographically secure salt
@@ -199,7 +198,7 @@ func hashPassword(password string, p *hashParams) (string, error) {
 		return "", err
 	}
 
-	if p == nil {
+	if (hashParams{}) == **p {
 		*param = &hashParams{}
 
 		(*param).iterations = uint32(internal.PASSWORD_HASH_ITERATIONS)
@@ -208,7 +207,7 @@ func hashPassword(password string, p *hashParams) (string, error) {
 		(*param).keyLength = uint32(internal.PASSWORD_HASH_KEY_LEN)
 		(*param).saltLength = uint32(internal.PASSWORD_HASH_SALT_LEN)
 	} else {
-		param = &p
+		param = p
 	}
 
 	// hash the Password
