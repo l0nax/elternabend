@@ -1,6 +1,9 @@
 package models
 
 import (
+	"crypto/rand"
+	"crypto/subtle"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -11,8 +14,15 @@ import (
 	"github.com/gobuffalo/validate/validators"
 	"github.com/gofrs/uuid"
 	suuid "github.com/google/uuid"
+	"github.com/l0nax/elternabend/internal"
 	"github.com/pkg/errors"
+	"golang.org/x/crypto/argon2"
 	"golang.org/x/crypto/bcrypt"
+)
+
+var (
+	ErrInvalidHash         = errors.New("the encoded hash is not in the correct format")
+	ErrIncompatibleVersion = errors.New("incompatible version of argon2")
 )
 
 type User struct {
@@ -155,4 +165,143 @@ func (v *EmailNotTaken) IsValid(errors *validate.Errors) {
 		// found a user with the same email
 		errors.Add(validators.GenerateKey(v.Name), "An account with that email already exists.")
 	}
+}
+
+// ==========> Internal Functions <==========
+
+type hashParams struct {
+	memory     uint32
+	iterations uint32
+	threads    uint8
+	saltLength uint32
+	keyLength  uint32
+}
+
+func generateRandomBytes(n uint32) ([]byte, error) {
+	ret := make([]byte, n)
+	_, err := rand.Read(ret)
+	if err != nil {
+		return nil, err
+	}
+
+	return ret, nil
+}
+
+// hashPassword hashes a password with the given Params
+// set @p to nil to use the Env Configuration (set by the user), ONLY set @p
+// if want to compare two hashes.
+func hashPassword(password string, p *hashParams) (string, error) {
+	var param **hashParams
+
+	// generate cryptographically secure salt
+	salt, err := generateRandomBytes(uint32(internal.PASSWORD_HASH_SALT_LEN))
+	if err != nil {
+		return "", err
+	}
+
+	if p == nil {
+		*param = &hashParams{}
+
+		(*param).iterations = uint32(internal.PASSWORD_HASH_ITERATIONS)
+		(*param).memory = uint32(internal.PASSWORD_HASH_MEMORY)
+		(*param).threads = uint8(internal.PASSWORD_HASH_THREADS)
+		(*param).keyLength = uint32(internal.PASSWORD_HASH_KEY_LEN)
+		(*param).saltLength = uint32(internal.PASSWORD_HASH_SALT_LEN)
+	} else {
+		param = &p
+	}
+
+	// hash the Password
+	hash := argon2.IDKey([]byte(password), salt, (*param).iterations,
+		(*param).memory, (*param).threads,
+		(*param).keyLength)
+
+	// encode salt and hash since they are in binary format
+	_salt := base64.RawStdEncoding.EncodeToString(salt)
+	_hash := base64.RawStdEncoding.EncodeToString(hash)
+
+	// "encode" all needed data into a ASCII string
+	// which is:
+	//	$argon2id$v=19$m=65536,t=3,p=2$c29tZXNhbHQ$RdescudvJCsgt3ub+b+dWRWJTmaaJObG
+	//
+	// * $argon2id				— the variant of Argon2 being used.
+	// * $v=19				— the version of Argon2 being used.
+	// * $m=65536,t=3,p=2			— the memory (m),
+	//					  iterations (t) and
+	//					  parallelism (p) parameters being used.
+	// * $c29tZXNhbHQ			— the base64-encoded salt,
+	//					  using standard base64-encoding
+	//					  and no padding.
+	// * $RdescudvJCsgt3ub+b+dWRWJTmaaJObG	— the base64-encoded hashed
+	//					  password (derived key),
+	//					  using standard base64-encoding
+	//					  and no padding.
+	hashedPwd := fmt.Sprintf("$argon2id$v=%d$m=%d,t=%d,p=%d$%s$%s",
+		argon2.Version, (*param).memory,
+		(*param).iterations, (*param).threads, _salt,
+		_hash)
+
+	return hashedPwd, nil
+}
+
+// decodeArgonHash decodes an Argon2 hash and returns all relevant/ needed data
+// to generate an identical hash.
+func decodeArgonHash(hash string) (p *hashParams, salt, rawHash []byte, err error) {
+	vals := strings.Split(hash, "$")
+	if len(vals) != 6 {
+		return nil, nil, nil, ErrInvalidHash
+	}
+
+	var version int
+	_, err = fmt.Sscanf(vals[2], "v=%d", &version)
+	if err != nil {
+		return nil, nil, nil, err
+	}
+	if version != argon2.Version {
+		return nil, nil, nil, ErrIncompatibleVersion
+	}
+
+	p = &hashParams{}
+	_, err = fmt.Sscanf(vals[3], "m=%d,t=%d,p=%d", &p.memory, &p.iterations,
+		&p.threads)
+	if err != nil {
+		return nil, nil, nil, err
+	}
+
+	salt, err = base64.RawStdEncoding.DecodeString(vals[4])
+	if err != nil {
+		return nil, nil, nil, err
+	}
+	p.saltLength = uint32(len(salt))
+
+	rawHash, err = base64.RawStdEncoding.DecodeString(vals[5])
+	if err != nil {
+		return nil, nil, nil, err
+	}
+	p.keyLength = uint32(len(hash))
+
+	return p, salt, rawHash, nil
+}
+
+// comparePasswordAndHash compares an raw Password and an Argon2 hash
+func comparePasswordAndHash(password, encodedHash string) (match bool, err error) {
+	// Extract the parameters, salt and derived key from the encoded password
+	// hash.
+	p, salt, hash, err := decodeArgonHash(encodedHash)
+	if err != nil {
+		return false, err
+	}
+
+	// Derive the key from the other password using the same parameters.
+	otherHash := argon2.IDKey([]byte(password), salt, p.iterations, p.memory,
+		p.threads, p.keyLength)
+
+	// Check that the contents of the hashed passwords are identical. Note
+	// that we are using the subtle.ConstantTimeCompare() function for this
+	// to help prevent timing attacks.
+	if subtle.ConstantTimeCompare(hash, otherHash) == 1 {
+		return true, nil
+	}
+
+	return false, nil
 }
