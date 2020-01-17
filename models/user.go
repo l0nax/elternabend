@@ -284,7 +284,7 @@ func decodeArgonHash(hash string) (p *hashParams, salt, rawHash []byte, err erro
 }
 
 // comparePasswordAndHash compares an raw Password and an Argon2 hash
-func comparePasswordAndHash(password, encodedHash string) (match bool, err error) {
+func ComparePasswordAndHash(password, encodedHash string) (match bool, err error) {
 	// Extract the parameters, salt and derived key from the encoded password
 	// hash.
 	p, salt, hash, err := decodeArgonHash(encodedHash)
