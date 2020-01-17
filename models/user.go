@@ -17,7 +17,7 @@ import (
 
 type User struct {
 	ID           uuid.UUID  `json:"id" db:"id" rw:"r"`
-	Username     string     `json:"username" db:"username" rw:"w"`
+	Username     string     `json:"username" db:"username"`
 	PasswordHash string     `json:"-" db:"password_hash"`
 	ClassTeacher bool       `json:"-" db:"class_teacher"` // check if only rw: r
 	Roles        string     `json:"-" db:"roles"`         // a comma seperated list of all roles
