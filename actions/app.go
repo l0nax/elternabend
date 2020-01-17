@@ -194,7 +194,7 @@ func App() *buffalo.App {
 
 		// ===> API <===
 		// ==> v1 <==
-		apiV1 := app.Group("/v1/")
+		apiV1 := app.Group("/api/v1/")
 		v1APIs := []RouteResource{
 			{
 				Route:   "/",
@@ -208,11 +208,11 @@ func App() *buffalo.App {
 		}
 
 		// Teacher API
-		apiV1_teacher := apiV1.Group("/teacher")
+		apiV1_teacher := apiV1.Group("/teacher/")
 		apiV1_teachers := []RouteResource{
 			{
 				"/new",
-				"CREATE",
+				"POST",
 				TeacherCreate,
 			},
 		}
@@ -279,6 +279,7 @@ func SetCurrentUser(next buffalo.Handler) buffalo.Handler {
 			if err := tx.Where("session_id = ?", _uuid).First(user); err != nil {
 				// clear cession storage of user
 				c.Session().Clear()
+				c.Session().Delete("session_uuid")
 
 				return errors.Wrap(errors.WithStack(err), "Error while searching UUID of user")
 			}
