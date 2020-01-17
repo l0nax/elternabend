@@ -7,6 +7,7 @@
 #
 #   DESCRIPTION: This scripts starts an DEVELOP PostgreSQL Server in a Docker
 #                container!
+#                THIS IS ONLY FOR DEVELOPER!
 #
 #       OPTIONS: ---
 #  REQUIREMENTS: docker
@@ -21,10 +22,22 @@
 set -o nounset                              # Treat unset variables as an error
 
 DOCKER_CONTENT_TRUST=0
-docker pull postgres:9.5
+
+echo "****************************************"
+echo "*             ATTENTION!               *"
+echo "*   Please use this script only for    *"
+echo "*   developing and not in production!  *"
+echo "****************************************"
+echo -e "\n\n"
+
+set -x
+sleep 1
+
+docker pull postgres:10
 
 docker run --rm -d \
         --name elternabend_db \
         -e POSTGRES_PASSWORD=postgres \
         -p 5432:5432 \
-        postgres:9.5
+        postgres:10 \
+        -c log_statement=all -c log_destination=stderr
