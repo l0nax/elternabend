@@ -15,6 +15,7 @@ type Teacher struct {
 	Name      string    `json:"name" db:"name" rw:"w"`
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
+	Mail      string    `json:"mail" db:"-"` // This field is only to unmarshal requests. Mail is saved in 'users' table
 }
 
 // String is not required by pop and may be deleted
@@ -41,8 +42,9 @@ func (t *Teacher) Validate(tx *pop.Connection) (*validate.Errors, error) {
 // ValidateCreate gets run every time you call "pop.ValidateAndCreate" method.
 // This method is not required and may be deleted.
 func (t *Teacher) ValidateCreate(tx *pop.Connection) (*validate.Errors, error) {
-	var err error
-	return validate.Validate(
-		&validators.StringIsPresent{Field: t.Name, Name: "Name"},
-	), err
+	// var err error
+	// return validate.Validate(
+	//         &validators.StringIsPresent{Field: t.Name, Name: "Name"},
+	// ), err
+	return validate.NewErrors(), nil
 }
