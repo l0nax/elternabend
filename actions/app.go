@@ -80,6 +80,7 @@ func App() *buffalo.App {
 		// Setup and use translations:
 		app.Use(translations())
 
+		app.GET("", HomeHandler)
 		app.GET("/", HomeHandler)
 
 		// ===> Dashboard <===
