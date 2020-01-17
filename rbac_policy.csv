@@ -1,6 +1,7 @@
 p, admin, /*, *
 
 p, class_teacher, /, GET
+p, class_teacher, /u/logout, GET
 p, class_teacher, /d, GET
 p, class_teacher, /d, POST
 
