@@ -226,6 +226,9 @@ func SetCurrentUser(next buffalo.Handler) buffalo.Handler {
 				return errors.Wrap(errors.WithStack(err), "Error while converting string UUID into struct")
 			}
 			if err := tx.Where("session_id = ?", _uuid).First(user); err != nil {
+				// clear cession storage of user
+				c.Session().Clear()
+
 				return errors.Wrap(errors.WithStack(err), "Error while searching UUID of user")
 			}
 
