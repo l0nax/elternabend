@@ -93,16 +93,16 @@ func (u *User) Create(tx *pop.Connection) (*validate.Errors, error) {
 	}
 
 	log.Printf("Hashing Password")
+
 	// hash Password
-	pwdHash, err := bcrypt.GenerateFromPassword([]byte(u.Password), (bcrypt.MaxCost / 2))
+	pwdHash, err := hashPassword(u.Password, nil)
 	if err != nil {
-		log.Printf("[ERROR] Error while hashing Password: %s", err.Error())
-		return validate.NewErrors(), errors.WithStack(errors.Wrap(err, "Error while hashing Password: "))
+		return validate.NewErrors(), errors.WithStack(errors.Wrap(err, "Error while hashing Password"))
 	}
 
 	log.Printf("Password hashed: '%s'", string(pwdHash))
 
-	u.PasswordHash = string(pwdHash)
+	u.PasswordHash = pwdHash
 	return tx.ValidateAndCreate(u)
 }
 
