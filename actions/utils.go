@@ -9,8 +9,8 @@ import (
 )
 
 // BindJSON unmarshals the Request Body into an struct
-func BindJSON(v interface{}, c *buffalo.Context) error {
-	body, err := ioutil.ReadAll((*c).Request().Body)
+func BindJSON(v interface{}, c buffalo.Context) error {
+	body, err := ioutil.ReadAll(c.Request().Body)
 	if err != nil {
 		return errors.Wrap(err, "Error while reading request body")
 	}
