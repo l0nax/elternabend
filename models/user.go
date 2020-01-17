@@ -101,7 +101,7 @@ func (u *User) Create(tx *pop.Connection) (*validate.Errors, error) {
 func (u *User) Validate(tx *pop.Connection) (*validate.Errors, error) {
 	return validate.Validate(
 		&validators.StringIsPresent{Field: u.Username, Name: "Username"},
-		&validators.StringIsPresent{Field: u.Password, Name: "PasswordHash"},
+		&validators.StringIsPresent{Field: u.Password, Name: "Password"},
 		// &UsernameNotTaken{Name: "Username", Field: u.Username, tx: tx},
 		// &EmailNotTaken{Name: "Email", Field: u.Email, tx: tx},
 	), nil
