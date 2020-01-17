@@ -1,6 +1,9 @@
 package actions
 
 import (
+	"log"
+	"strconv"
+
 	"github.com/casbin/casbin"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/envy"
@@ -10,7 +13,6 @@ import (
 	suuid "github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/unrolled/secure"
-	"log"
 
 	"github.com/gobuffalo/buffalo-pop/pop/popmw"
 	csrf "github.com/gobuffalo/mw-csrf"
@@ -24,6 +26,26 @@ import (
 var ENV = envy.Get("GO_ENV", "development")
 var app *buffalo.App
 var T *i18n.Translator
+
+
+// ======================================================
+//		Global Configuration Variables
+// ======================================================
+var TEACHER_PASSWORD_LENGTH int
+
+
+// getGlobalConf initializes all global (env) Variables.
+// Panics if there was an error
+func getGlobalConf() {
+	var err error
+
+	TEACHER_PASSWORD_LENGTH, err = strconv.Atoi(envy.Get("TEACHER_PASSWORD_LENGTH", "6"))
+	panicErr(Wrap(err, "Error while converting 'TEACHER_PASSWORD_LENGTH' to int"))
+}
+
+func panicErr(err error) {
+	log.Panic(err)
+}
 
 // App is where all routes and middleware for buffalo
 // should be defined. This is the nerve center of your
@@ -44,6 +66,9 @@ func App() *buffalo.App {
 			Env:         ENV,
 			SessionName: "_elternabend_session",
 		})
+
+		// first setup config (env) vars
+		getGlobalConf()
 
 		// setup casbin auth rules
 		authEnforcer, err := casbin.NewEnforcerSafe(envy.Get("RBAC_AUTH_MODEL_PATH", "rbac_model.conf"),
