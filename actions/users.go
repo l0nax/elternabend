@@ -10,7 +10,6 @@ import (
 	suuid "github.com/google/uuid"
 	"github.com/l0nax/elternabend/models"
 	"github.com/pkg/errors"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type LoginRequest struct {
@@ -59,20 +58,26 @@ func Login(c buffalo.Context) error {
 	}
 
 	// compare Passwords
-	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(pwd))
+	ok, err = models.ComparePasswordAndHash(pwd, user.PasswordHash)
 	if err != nil {
-		return c.Error(http.StatusForbidden, errors.Wrap(err, "Invalid credentials"))
+		return c.Error(http.StatusInternalServerError,
+			Wrap(err, "Error while checking credentials"))
 	}
+	if !ok {
+		return c.Error(http.StatusForbidden,
+			errors.Wrap(err, "Invalid credentials"))
+	}
+
+	// clear old Session informations from User
+	c.Session().Clear()
 
 	// the User ID should NOT be used as Session ID because when it's leaked
 	// the User needs to be re-created.
-	// c.Session().Clear()
 	user.SessionID = suuid.New()
 	c.Session().Set("session_uuid", user.SessionID.String())
 	c.Flash().Add("success", "Welcome back!")
 
 	// write Session ID to DB
-	log.Printf("==> %v", user)
 	err = tx.Update(user)
 	if err != nil {
 		return err
@@ -86,8 +91,8 @@ func Login(c buffalo.Context) error {
 
 // LogOut logs an User out and deletes all the session informations
 func LogOut(c buffalo.Context) error {
-	user := models.User{}
-	err := c.Bind(&user)
+	user := &models.User{}
+	err := c.Bind(user)
 	if err != nil {
 		return err
 	}
@@ -100,7 +105,7 @@ func LogOut(c buffalo.Context) error {
 
 	// clear SessionID from Database
 	user.SessionID = suuid.UUID{}
-	err = tx.Update(&user)
+	err = tx.Update(user)
 	if err != nil {
 		return errors.Wrap(err, "Error while removing Session ID from Database")
 	}
@@ -148,7 +153,7 @@ func CreateUserPost(c buffalo.Context) error {
 
 	// c.Flash().Add("success", "Account created successfully!")
 
-	return c.Redirect(http.StatusTemporaryRedirect, "/")
+	return c.Redirect(http.StatusFound, "/")
 	// return c.Render(http.StatusOK, r.HTML("index"))
 }
 
