@@ -22,3 +22,8 @@ func BindJSON(v interface{}, c buffalo.Context) error {
 
 	return nil
 }
+
+// Wrap wraps an error and a message AND adds the 'WithStack'
+func Wrap(err error, msg string) error {
+	return errors.WithStack(errors.Wrap(err, msg))
+}
