@@ -3,6 +3,7 @@ package actions
 import (
 	"encoding/json"
 	"io/ioutil"
+	"math/rand"
 
 	"github.com/gobuffalo/buffalo"
 	"github.com/pkg/errors"
@@ -26,4 +27,21 @@ func BindJSON(v interface{}, c buffalo.Context) error {
 // Wrap wraps an error and a message AND adds the 'WithStack'
 func Wrap(err error, msg string) error {
 	return errors.WithStack(errors.Wrap(err, msg))
+}
+
+// RandomString generates a random string
+func RandomString(length int) string {
+	chars := "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+		"abcdefghijklmnopqrstuvwxyz" +
+		"0123456789"
+	charsLen := len(chars)
+
+	var randString []byte
+
+	// add Chars
+	for i := 0; i < length; i++ {
+		randString[i] = chars[rand.Intn(charsLen)]
+	}
+
+	return string(randString)
 }
