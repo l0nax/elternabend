@@ -172,6 +172,39 @@ func App() *buffalo.App {
 			rrApi.AddRoute(apiV1_teacher)
 		}
 
+		// Class API
+		apiV1_Class := apiV1.Group("/class/")
+		apiV1_Classes := []RouteResource{
+			{
+				"/new",
+				"POST",
+				ClassCreate,
+			},
+			{
+				"/map",
+				"POST",
+				ClassMap,
+			},
+		}
+
+		for _, rrApi := range apiV1_Classes {
+			rrApi.AddRoute(apiV1_Class)
+		}
+
+		/*          // Subject Class API */
+		// apiV1_subject := apiV1.Group("/subject/")
+		// apiV1_subjects := []RouteResource{
+		//         {
+		//                 "/new",
+		//                 "POST",
+		//                 SubjectCreate,
+		//         },
+		// }
+
+		// for _, rrApi := range apiV1_subjects {
+		//         rrApi.AddRoute(apiV1_subject)
+		// }
+
 		// ===> Only for Developing <===
 		routes := RouteResource{
 			Route:   "/routes",
