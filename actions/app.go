@@ -250,6 +250,7 @@ func SetCurrentUser(next buffalo.Handler) buffalo.Handler {
 	return func(c buffalo.Context) error {
 		if uuid := c.Session().Get("session_uuid"); uuid != nil {
 			log.Printf("FOUND: %s", c.Session().Get("session_uuid"))
+
 			user := &models.User{}
 			tx := c.Value("tx").(*pop.Connection)
 			if tx == nil {
@@ -260,6 +261,7 @@ func SetCurrentUser(next buffalo.Handler) buffalo.Handler {
 			if err != nil {
 				return errors.Wrap(errors.WithStack(err), "Error while converting string UUID into struct")
 			}
+
 			if err := tx.Where("session_id = ?", _uuid).First(user); err != nil {
 				// clear cession storage of user
 				c.Session().Clear()
