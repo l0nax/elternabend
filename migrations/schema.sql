@@ -85,7 +85,8 @@ CREATE TABLE public.teachers (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     uid uuid NOT NULL,
-    name character varying(255) NOT NULL
+    name character varying(255) NOT NULL,
+    room character varying(255) NOT NULL
 );
 
 

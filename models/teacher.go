@@ -13,6 +13,7 @@ type Teacher struct {
 	ID        uuid.UUID `json:"id" db:"id" rw:"r"`
 	UserID    uuid.UUID `json:"-" db:"uid"`
 	Name      string    `json:"name" db:"name" rw:"w"`
+	Room      string    `json:"room" db:"room"` // Room describes where parents can find the teacher
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
 	Mail      string    `json:"mail" db:"-"` // This field is only to unmarshal requests. Mail is saved in 'users' table
