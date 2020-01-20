@@ -15,6 +15,7 @@ type Class struct {
 	NumStudents int       `json:"num_students" db:"num_students"`
 	CreatedAt   time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at" db:"updated_at"`
+	Msg         string    `json:"msg" db:"-"` // 'Msg' is only to send a Message back via the API
 }
 
 // String is not required by pop and may be deleted
