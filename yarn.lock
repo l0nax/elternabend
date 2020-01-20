@@ -1126,18 +1126,6 @@ body@^5.1.0:
     raw-body "~1.1.0"
     safe-json-parse "~1.0.1"
 
-bootstrap-datepicker@^1.9.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/bootstrap-datepicker/-/bootstrap-datepicker-1.9.0.tgz#e4bfce3fcce1967876b21dc6833ec5994aaed090"
-  integrity sha512-9rYYbaVOheGYxjOr/+bJCmRPihfy+LkLSg4fIFMT9Od8WwWB/MB50w0JO1eBgKUMbb7PFHQD5uAfI3ArAxZRXA==
-  dependencies:
-    jquery ">=1.7.1 <4.0.0"
-
-bootstrap-datetime-picker@^2.4.4:
-  version "2.4.4"
-  resolved "https://registry.yarnpkg.com/bootstrap-datetime-picker/-/bootstrap-datetime-picker-2.4.4.tgz#b7cfe843a3c6d221c03293c9a464a4cc35d73968"
-  integrity sha1-t8/oQ6PG0iHAMpPJpGSkzDXXOWg=
-
 bootstrap@4.3.1:
   version "4.3.1"
   resolved "https://elilillyco.jfrog.io/elilillyco/api/npm/Lilly-NPM/bootstrap/-/bootstrap-4.3.1.tgz#280ca8f610504d99d7b6b4bfc4b68cec601704ac"
@@ -2858,7 +2846,12 @@ jquery-ujs@~1.2.2:
   dependencies:
     jquery ">=1.8.0"
 
-"jquery@>=1.7.1 <4.0.0", jquery@>=1.8.0, jquery@~3.4.1:
+jquery@3.3.1:
+  version "3.3.1"
+  resolved "https://www.fabmation.info/artifact/api/npm/npm/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
+  integrity sha1-lYzinoHJeQ8xvneS311NlfxX+8o=
+
+jquery@>=1.8.0:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.4.1.tgz#714f1f8d9dde4bdfa55764ba37ef214630d80ef2"
   integrity sha512-36+AdBzCL+y6qjw5Tx7HgzeGCzC81MDDgaUP8ld2zhx58HdqXGoBd+tHdrBMiyjGQs0Hxs/MLZTu/eHNJJuWPw==
@@ -3336,6 +3329,11 @@ mixin-object@^2.0.1:
   integrity sha1-MAV0OOrGz3+MR2fzhkjWaX11yQM=
   dependencies:
     minimist "0.0.8"
+
+moment@2.20.1:
+  version "2.20.1"
+  resolved "https://www.fabmation.info/artifact/api/npm/npm/moment/-/moment-2.20.1.tgz#d6eb1a46cbcc14a2b2f9434112c1ff8907f313fd"
+  integrity sha1-1usaRsvMFKKy+UNBEsH/iQfzE/0=
 
 move-concurrently@^1.0.1:
   version "1.0.1"

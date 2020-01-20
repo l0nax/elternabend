@@ -12,11 +12,10 @@
     "@fortawesome/fontawesome-free": "^5.12.0",
     "@types/popper.js": "^1.11.0",
     "bootstrap": "4.3.1",
-    "bootstrap-datepicker": "^1.9.0",
-    "bootstrap-datetime-picker": "^2.4.4",
-    "jquery": "~3.4.1",
+    "jquery": "3.3.1",
     "jquery-ujs": "~1.2.2",
     "mdbootstrap": "~4.10.0",
+    "moment": "2.20.1",
     "papaparse": "^5.1.1",
     "popper.js": "^1.14.4"
   },
