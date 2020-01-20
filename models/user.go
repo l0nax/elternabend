@@ -94,7 +94,8 @@ func (u *User) Create(tx *pop.Connection) (*validate.Errors, error) {
 	log.Printf("Hashing Password")
 
 	// hash Password
-	pwdHash, err := hashPassword(u.Password, nil)
+	paramTmp := &hashParams{}
+	pwdHash, err := hashPassword(u.Password, &paramTmp)
 	if err != nil {
 		return validate.NewErrors(), errors.WithStack(errors.Wrap(err, "Error while hashing Password"))
 	}
@@ -190,7 +191,7 @@ func generateRandomBytes(n uint32) ([]byte, error) {
 // set @p to nil to use the Env Configuration (set by the user), ONLY set @p
 // if want to compare two hashes.
 func hashPassword(password string, p **hashParams) (string, error) {
-	var param **hashParams
+	var param *hashParams
 
 	// generate cryptographically secure salt
 	salt, err := generateRandomBytes(uint32(internal.PASSWORD_HASH_SALT_LEN))
@@ -199,7 +200,7 @@ func hashPassword(password string, p **hashParams) (string, error) {
 	}
 
 	if (hashParams{}) == **p {
-		*param = &hashParams{}
+		param = &hashParams{}
 
 		(*param).iterations = uint32(internal.PASSWORD_HASH_ITERATIONS)
 		(*param).memory = uint32(internal.PASSWORD_HASH_MEMORY)
@@ -207,7 +208,7 @@ func hashPassword(password string, p **hashParams) (string, error) {
 		(*param).keyLength = uint32(internal.PASSWORD_HASH_KEY_LEN)
 		(*param).saltLength = uint32(internal.PASSWORD_HASH_SALT_LEN)
 	} else {
-		param = p
+		param = *p
 	}
 
 	// hash the Password
