@@ -2,6 +2,8 @@ package actions
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop"
 	"github.com/l0nax/elternabend/models"
@@ -198,6 +200,7 @@ type JClassMap struct {
 func ClassMap(c buffalo.Context) error {
 	classMap := &JClassMap{}
 
+	log.Printf("[DEBUG] Binding to JSON\n")
 	err := BindJSON(classMap, c)
 	if err != nil {
 		return Wrap(err, "Error while binding request to struct")
@@ -209,28 +212,28 @@ func ClassMap(c buffalo.Context) error {
 		return fmt.Errorf("no transaction found")
 	}
 
-	ok, err = classMap.Class.Exists(tx)
-	if err != nil {
-		return err
-	}
+	/*  ok, err = classMap.Class.Exists(tx) */
+	// if err != nil {
+	//         return err
+	// }
 
-	// check if Class already exists
-	if !ok {
-		// create Class
-		verrs, err := tx.ValidateAndCreate(classMap.Class)
+	// // check if Class already exists
+	// if !ok {
+	//         // create Class
+	//         verrs, err := tx.ValidateAndCreate(classMap.Class)
 
-		if err != nil {
-			return Wrap(err, "Error while validating and creating DB entry")
-		}
+	//         if err != nil {
+	//                 return Wrap(err, "Error while validating and creating DB entry")
+	//         }
 
-		if verrs.HasAny() {
-			// Make the errors available inside the html template
-			c.Set("errors", verrs)
+	//         if verrs.HasAny() {
+	//                 // Make the errors available inside the html template
+	//                 c.Set("errors", verrs)
 
-			// response with Error
-			return c.Error(422, verrs)
-		}
-	}
+	//                 // response with Error
+	//                 return c.Error(422, verrs)
+	//         }
+	// }
 
 	/// create Subject->Class DB entry
 	// check if an equal entry already exists
@@ -252,8 +255,11 @@ func ClassMap(c buffalo.Context) error {
 	}
 
 	if verrs.HasAny() {
+		log.Printf("Error while Validating and Creating: %s\n", verrs.Error())
+
 		// Make the errors available inside the html template
 		c.Set("errors", verrs)
+		classMap.Msg = verrs.Error()
 
 		// Render again the edit.html template that the user can
 		// correct the input.
