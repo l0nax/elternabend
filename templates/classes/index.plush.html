@@ -1,0 +1,35 @@
+<div class="page-header">
+  <h1>Classes</h1>
+</div>
+<ul class="list-unstyled list-inline">
+  <li>
+    <%= linkTo(newClassesPath(), {class: "btn btn-primary"}) { %>
+      Create New Class
+    <% } %>
+  </li>
+</ul>
+
+<table class="table table-striped">
+  <thead>
+  <th>Class</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (class) in classes { %>
+      <tr>
+      <td><%= class.Class %></td>
+        <td>
+          <div class="pull-right">
+            <%= linkTo(classPath({ class_id: class.ID }), {class: "btn btn-info", body: "View"}) %>
+            <%= linkTo(editClassPath({ class_id: class.ID }), {class: "btn btn-warning", body: "Edit"}) %>
+            <%= linkTo(classPath({ class_id: class.ID }), {class: "btn btn-danger", "data-method": "DELETE", "data-confirm": "Are you sure?", body: "Destroy"}) %>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= paginator(pagination) %>
+</div>
