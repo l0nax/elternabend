@@ -10,12 +10,12 @@ import (
 	"github.com/gofrs/uuid"
 )
 
+// SubjectID int       `json:"subject_id" db:"subject_id"`
 type SubjectClass struct {
-	ID uuid.UUID `json:"id" db:"id"`
-	// SubjectID int       `json:"subject_id" db:"subject_id"`
+	ID          uuid.UUID `json:"id" db:"id"`
 	SubjectName string    `json:"subject_name" db:"subject_name"`
-	ClassID     int       `json:"class_id" db:"class_id"`
-	TeacherID   int       `json:"teacher_id" db:"teacher_id"`
+	ClassID     uuid.UUID `json:"class_id" db:"class_id"`
+	TeacherID   uuid.UUID `json:"teacher_id" db:"teacher_id"`
 	CreatedAt   time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at" db:"updated_at"`
 }
@@ -30,8 +30,8 @@ func (s *SubjectClass) Validate(tx *pop.Connection) (*validate.Errors, error) {
 	return validate.Validate(
 		// &validators.IntIsPresent{Field: s.SubjectID, Name: "SubjectID"},
 		&validators.StringIsPresent{Field: s.SubjectName, Name: "SubjectName"},
-		&validators.IntIsPresent{Field: s.ClassID, Name: "ClassID"},
-		&validators.IntIsPresent{Field: s.TeacherID, Name: "TeacherID"},
+		&validators.UUIDIsPresent{Field: s.ClassID, Name: "ClassID"},
+		&validators.UUIDIsPresent{Field: s.TeacherID, Name: "TeacherID"},
 	), nil
 }
 
