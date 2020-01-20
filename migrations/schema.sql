@@ -21,6 +21,21 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: classes; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.classes (
+    id uuid NOT NULL,
+    name character varying(255) NOT NULL,
+    num_students integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.classes OWNER TO postgres;
+
+--
 -- Name: schema_migration; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -62,6 +77,14 @@ CREATE TABLE public.users (
 
 
 ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- Name: classes classes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.classes
+    ADD CONSTRAINT classes_pkey PRIMARY KEY (id);
+
 
 --
 -- Name: teachers teachers_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
