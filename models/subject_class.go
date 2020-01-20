@@ -46,3 +46,14 @@ func (s *SubjectClass) ValidateCreate(tx *pop.Connection) (*validate.Errors, err
 func (s *SubjectClass) ValidateUpdate(tx *pop.Connection) (*validate.Errors, error) {
 	return validate.NewErrors(), nil
 }
+
+// Exists checks if an Subject->Class entry already exists.
+func (s SubjectClass) Exists(tx *pop.Connection) (bool, error) {
+	err := tx.Where("subject_name = ? and class_id = ? and teacher_id = ?",
+		s.SubjectName, s.ClassID, s.TeacherID)
+	if err != nil {
+		return false, nil
+	}
+
+	return true, nil
+}
