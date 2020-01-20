@@ -1,7 +1,7 @@
 create_table("subject_classes") {
-	t.Column("subject_class", "string", {})
+	t.Column("id", "uuid", {primary: true})
         t.Column("subject_name", "string", {})
-        t.Column("class_id", "int")
-        t.Column("teacher_id", "int")
+        t.Column("class_id", "uuid")
+        t.Column("teacher_id", "uuid")
 	t.Timestamps()
 }
