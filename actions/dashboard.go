@@ -53,3 +53,9 @@ func Dashboard(c buffalo.Context) error {
 	// TODO: Implement a nice Dashboard
 	return c.Render(http.StatusOK, r.HTML("dashboard/index"))
 }
+
+// DashboardDashboard default implementation.
+func DashboardDashboard(c buffalo.Context) error {
+	return c.Render(200, r.HTML("dashboard/dashboard.html"))
+}
+
