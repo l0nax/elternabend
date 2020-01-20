@@ -1,0 +1,5 @@
+class_name,num_students,teacher_name,teacher_mail,subject,teacher_room
+TGI11/2,5,"Christin Lowe","christin.lowe@rbs-ulm.de",Deutsch,"B6-555"
+TGI11/2,5,"Christin Lowe","christin.lowe@rbs-ulm.de",English,"B6-555"
+TGI11/2,5,"Bernd Weissmuller","bernd.weissmuller@rbs-ulm.de",Math,"B6-555"
+TGI11/2,5,"Sandra Foerster","sandra.foerster@rbs-ulm.de",Sport,"B6-555"
