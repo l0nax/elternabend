@@ -5,6 +5,7 @@ import (
 
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop"
+	"github.com/gobuffalo/validate"
 	"github.com/l0nax/elternabend/models"
 )
 
@@ -67,7 +68,7 @@ func SubjectCreate(c buffalo.Context) error {
 	subject := &models.Subject{}
 
 	// Bind subject to the html form elements
-	if err := c.Bind(subject); err != nil {
+	if err := BindJSON(subject, c); err != nil {
 		return err
 	}
 
@@ -77,8 +78,7 @@ func SubjectCreate(c buffalo.Context) error {
 		return fmt.Errorf("no transaction found")
 	}
 
-	// Validate the data from the html form
-	verrs, err := tx.ValidateAndCreate(subject)
+	verrs, err := CreateSubject(subject, tx)
 	if err != nil {
 		return err
 	}
@@ -89,13 +89,14 @@ func SubjectCreate(c buffalo.Context) error {
 
 		// Render again the new.html template that the user can
 		// correct the input.
-		return c.Render(422, r.Auto(c, subject))
+		return c.Error(422, verrs)
 	}
 
 	// If there are no errors set a success message
 	c.Flash().Add("success", T.Translate(c, "subject.created.success"))
+
 	// and redirect to the subjects index page
-	return c.Render(201, r.Auto(c, subject))
+	return c.Render(200, r.JSON(subject))
 }
 
 // Edit renders a edit form for a Subject. This function is
@@ -184,3 +185,24 @@ func SubjectDestroy(c buffalo.Context) error {
 	// Redirect to the subjects index page
 	return c.Render(200, r.Auto(c, subject))
 }
+
+// CreateSubject creates a new Subject DB entry
+func CreateSubject(s *models.Subject, tx *pop.Connection) (*validate.Errors, error) {
+	// Validate the data from the html form
+	verrs, err := tx.ValidateAndCreate(s)
+	if err != nil {
+		return nil, err
+	}
+
+	if verrs.HasAny() {
+		// Make the errors available inside the html template
+		return verrs, nil
+	}
+
+	return nil, nil
+}
+
+// // SubjectExists checks if an subject already exists
+// func SubjectExists(s *models.Subject, tx *pop.Connection) (*validate.Errors, error) {
+
+// }
