@@ -8,22 +8,20 @@
 
         <div id="navbarNavDropdown" class="navbar-collapse collapse">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
+                    <li class="nav-item <%= if (current_route.PathName == "rootPath") { %> active <%} %>">
                     <a class="nav-link" href="/"><%= t("nav-home") %></a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item <%= if (current_route.PathName == "TODO") { %> active <%} %>">
                     <a class="nav-link" href="/e/classes"><%= t("nav-classes") %></a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item <%= if (current_route.PathName == "TODO") { %> active <%} %>">
                     <a class="nav-link" href="/e/profs"><%= t("nav-profs") %></a>
                 </li>
 
                 <!-- Show 'Event' Button if user is Admin -->
                 <%= if (user && user.IsAdmin()) { %>
-                        <li class="nav-item">
-                                <%= linkTo("dPath", {class: "nav-link"}) { %>
-                                <%= t("nav.dashboard") %>
-                                <% } %>
+                        <li class="nav-item <%= if (current_route.PathName == "dPath") { %> active <%} %>">
+                                <a class="nav-link" href="/d/"><%= t("nav.dashboard") %></a>
                         </li>
                 <% } %>
             </ul>
