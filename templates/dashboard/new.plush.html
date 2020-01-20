@@ -1,38 +1,44 @@
 <br/><br/>
 
 <div class="container">
+<%= javascriptTag("application.js") %>
+
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<%= javascriptTag("tempusdominus-bootstrap-4.js") %>
+<link rel="stylesheet" type="text/css" href="https://rawgit.com/tempusdominus/bootstrap-4/master/build/css/tempusdominus-bootstrap-4.css">
 <form method="POST" action="<%= newDPath() %>">
         <input name="authenticity_token" type="hidden" value="<%= authenticity_token %>" />
 
-        <div class="form-group col-sm-6 date" id="start_datepicker">
+        <div class="form-group col-sm-6 date">
                 <label for="input-startdate"><%= t("dashboard.new.start_date") %></label>
-                <div class="input-group">
-                        <input class="form-control" aria-describedby="startDateHelph" type="text" name="input-startdate" id="input-startdate" />
-                        <div class="input-group-append">
-                                <span class="input-group-text"><i class="far fa-calendar-alt" aria-hidden="true"></i></span>
-                        </div>
+                <div class="input-group date" id="start_datepicker" data-target-input="nearest">
+                    <input type="text" class="form-control datetimepicker-input" data-target="#start_datepicker"/>
+                    <div class="input-group-append" data-target="#start_datepicker" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
                 </div>
                 <small id="startDateHelp" class="form-text text-muted"><%= t("dashboard.new.tooltip_startdate") %></small>
         </div>
 
         <div class="form-group col-sm-6 date" id="end_datepicker">
                 <label for="input-enddate"><%= t("dashboard.new.end_date") %></label>
-                <div class="input-group">
-                        <input class="form-control" aria-describedby="endDateHelph" type="text" name="input-enddate" id="input-enddate" />
-                        <div class="input-group-append">
-                                <span class="input-group-text"><i class="far fa-calendar-alt" aria-hidden="true"></i></span>
-                        </div>
+                <div class="input-group date" id="input-enddate" data-target-input="nearest">
+                    <input type="text" class="form-control datetimepicker-input" data-target="#input-enddate"/>
+                    <div class="input-group-append" data-target="#input-enddate" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
                 </div>
                 <small id="endDateHelp" class="form-text text-muted"><%= t("dashboard.new.tooltip_enddate") %></small>
         </div>
 
         <div class="form-group col-sm-6 mb-3 date" id="kill_datepicker">
                 <label for="input-killdate"><%= t("dashboard.new.kill_date") %></label>
-                <div class="input-group">
-                        <input class="form-control" aria-describedby="killDateHelph" type="text" name="input-killdate" id="input-killdate" />
-                        <div class="input-group-append">
-                                <span class="input-group-text"><i class="far fa-calendar-alt" aria-hidden="true"></i></span>
-                        </div>
+                <div class="input-group date" id="input-killdate" data-target-input="nearest">
+                    <input type="text" class="form-control datetimepicker-input" data-target="#input-killdate"/>
+                    <div class="input-group-append" data-target="#input-killdate" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
                 </div>
                 <small id="killDateHelp" class="form-text text-muted"><%= t("dashboard.new.tooltip_killdate") %></small>
         </div>
@@ -42,7 +48,7 @@
                 <label for="input-killdate"><%= t("dashboard.new.import_data") %></label>
                 <div class="input-group">
                         <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="input-file" accept="csv"/>
+                                <input type="file" class="file custom-file-input" id="input-file" accept="csv"/>
                                 <label class="custom-file-label" for="input-file"><%= t("dashboard.new.importdata_browse") %></label>
                         </div>
                         <div class="input-group-append">
@@ -57,35 +63,10 @@
 </form>
 </div>
 
-
-<script src="/assets/js/dashboard.js" charset="utf-8"></script>
+<%= javascriptTag("dashboard.js") %>
 <script charset="utf-8">
         $(function() {
-                $('#import_btn').on('click', function(event) {
-                        // prevent following the link
-                        event.preventDefault();
-
-                        // check if file was uploaded
-                        if(document.getElementById("input-file").value != "") {
-                                // upload file
-                                var data = null;
-                                var file = event.target.files[0];
-                                var reader = new FileReader();
-                                reader.readAsText(file);
-                                reader.onload = function(event) {
-                                        var csvData = event.target.result;
-                                        var paredData = parseNewCSV(csvData);
-
-                                        // now we create all the needed Data for the event
-                                        processNewCSV(parsedData['data']);
-                                }
-
-                                reader.onerror = function() {
-                                        alert("Unable to parse and process the CSV file: " + file.fileName);
-                                }
-                        }
-                });
-                $('#input-startdate').datetimepicker({
+                $('#start_datepicker').datetimepicker({
                         format: 'yyyy-mm-dd hh:ii'
                 });
                 $('#input-enddate').datetimepicker({
