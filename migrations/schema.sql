@@ -36,6 +36,22 @@ CREATE TABLE public.classes (
 ALTER TABLE public.classes OWNER TO postgres;
 
 --
+-- Name: dashboards; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.dashboards (
+    id uuid NOT NULL,
+    start_date timestamp without time zone NOT NULL,
+    end_date timestamp without time zone NOT NULL,
+    kill_date timestamp without time zone NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.dashboards OWNER TO postgres;
+
+--
 -- Name: schema_migration; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -115,6 +131,14 @@ ALTER TABLE public.users OWNER TO postgres;
 
 ALTER TABLE ONLY public.classes
     ADD CONSTRAINT classes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dashboards dashboards_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.dashboards
+    ADD CONSTRAINT dashboards_pkey PRIMARY KEY (id);
 
 
 --

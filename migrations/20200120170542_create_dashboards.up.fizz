@@ -1,0 +1,7 @@
+create_table("dashboards") {
+	t.Column("id", "uuid", {primary: true})
+        t.Column("start_date", "timestamp")
+        t.Column("end_date", "timestamp")
+        t.Column("kill_date", "timestamp")
+	t.Timestamps()
+}
