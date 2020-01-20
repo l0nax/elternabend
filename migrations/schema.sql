@@ -47,6 +47,20 @@ CREATE TABLE public.schema_migration (
 ALTER TABLE public.schema_migration OWNER TO postgres;
 
 --
+-- Name: subjects; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.subjects (
+    id uuid NOT NULL,
+    name character varying(255) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.subjects OWNER TO postgres;
+
+--
 -- Name: teachers; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -84,6 +98,14 @@ ALTER TABLE public.users OWNER TO postgres;
 
 ALTER TABLE ONLY public.classes
     ADD CONSTRAINT classes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: subjects subjects_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.subjects
+    ADD CONSTRAINT subjects_pkey PRIMARY KEY (id);
 
 
 --
