@@ -47,6 +47,22 @@ CREATE TABLE public.schema_migration (
 ALTER TABLE public.schema_migration OWNER TO postgres;
 
 --
+-- Name: subject_classes; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.subject_classes (
+    subject_class character varying(255) NOT NULL,
+    subject_name character varying(255) NOT NULL,
+    class_id integer NOT NULL,
+    teacher_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.subject_classes OWNER TO postgres;
+
+--
 -- Name: subjects; Type: TABLE; Schema: public; Owner: postgres
 --
 
