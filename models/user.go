@@ -237,9 +237,8 @@ func hashPassword(password string, p **hashParams) (string, error) {
 	//					  using standard base64-encoding
 	//					  and no padding.
 	hashedPwd := fmt.Sprintf("$argon2id$v=%d$m=%d,t=%d,p=%d$%s$%s",
-		argon2.Version, (*param).memory,
-		(*param).iterations, (*param).threads, _salt,
-		_hash)
+		argon2.Version, (*param).memory, (*param).iterations,
+		(*param).threads, _salt, _hash)
 
 	return hashedPwd, nil
 }
@@ -278,7 +277,7 @@ func decodeArgonHash(hash string) (p *hashParams, salt, rawHash []byte, err erro
 	if err != nil {
 		return nil, nil, nil, err
 	}
-	p.keyLength = uint32(len(hash))
+	p.keyLength = uint32(len(rawHash))
 
 	return p, salt, rawHash, nil
 }
