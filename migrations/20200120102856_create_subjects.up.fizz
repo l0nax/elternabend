@@ -1,0 +1,5 @@
+create_table("subjects") {
+	t.Column("id", "uuid", {primary: true})
+        t.Column("name", "string", {})
+	t.Timestamps()
+}
