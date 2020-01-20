@@ -60,6 +60,19 @@
         </div>
 
 
+        <!-- This progress bar indicates how far we have got by creating the Classes/ Teachers/ ...-->
+        <div class="progress" id="prog-div" style="display:none">
+                  <div id="data_progress"
+                        class="progress-bar bg-success progress-bar-striped progress-bar-animated"
+                        role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                        aria-valuemax="100" style="width:0%">
+                          70%
+                  </div>
+        </div>
+        <br/>
+
+        <!-- Will only apear if a file has been choosen-->
+
         <button type="submit" class="col-lg-2 col-md-2 col-sm-2 bs-btn bs-btn-primary bs-btn-block"><%= t("submit") %></button>
 </form>
 </div>
@@ -99,7 +112,16 @@
           var teachers = new Map();
           var classes = new Map();
 
+          var progressPercent = 0;
+
+          // show progress-bar to user
+          var elem = document.getElementById("prog-div");
+          elem.style.display = "block";
+
           for(i = 0; i < data.length; i++) {
+            progressPercent = (i / (data.length - 1)) * 100;
+            updateProgressbar("data_progress", progressPercent);
+
             var dat = data[i];
 
             var _teacher = {
@@ -169,6 +191,12 @@
             var result = await mapSubjectClass(_map);
             console.log("++> Mapped " + JSON.stringify(result));
           }
+        }
+
+        function updateProgressbar(bar_id, percent) {
+                var elem = document.getElementById(bar_id);
+                elem.style.width = percent + "%";
+                elem.innerHTML = percent + "%";
         }
 
         // creates a new Teacher
