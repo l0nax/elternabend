@@ -61,7 +61,7 @@ func TeacherCreate(c buffalo.Context) error {
 	teacher := &models.Teacher{}
 
 	// Bind teacher to the html form elements
-	if err := BindJSON(&teacher, c); err != nil {
+	if err := BindJSON(teacher, c); err != nil {
 		return errors.Wrap(err, "Error while binding Params into Model")
 	}
 
