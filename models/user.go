@@ -35,6 +35,22 @@ type User struct {
 	Email        string     `json:"email" db:"email"`
 }
 
+// IsAdmin returns true if an User has a role assigned which grants him administrator
+// rights.
+func (u User) IsAdmin() bool {
+	roles := strings.Split(u.Roles, ",") // user.Roles
+
+	if len(roles) != 0 {
+		for _, v := range roles {
+			if strings.EqualFold(v, "admin") {
+				return true
+			}
+		}
+	}
+
+	return false
+}
+
 // String is not required by pop and may be deleted
 func (u User) String() string {
 	ju, _ := json.Marshal(u)
