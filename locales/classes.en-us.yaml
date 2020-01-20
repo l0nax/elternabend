@@ -1,0 +1,6 @@
+- id: "class.created.success"
+  translation: "Class was successfully created."
+- id: "class.updated.success"
+  translation: "Class was successfully updated."
+- id: "class.destroyed.success"
+  translation: "Class was successfully destroyed."
