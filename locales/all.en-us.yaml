@@ -41,6 +41,9 @@
 - id: nav-logout
   translation: "LogOut"
 
+- id: nav.dashboard
+  translation: "Event Dashboard"
+
 - id: index_Title
   translation: "Robert-Bosch-Schule Ulm Parents Evening Dashboard"
 
