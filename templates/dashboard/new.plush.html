@@ -1,3 +1,4 @@
+<script src="https://unpkg.com/papaparse@latest/papaparse.min.js"></script>
 <br/><br/>
 
 <div class="container">
@@ -52,7 +53,7 @@
                                 <label class="custom-file-label" for="input-file"><%= t("dashboard.new.importdata_browse") %></label>
                         </div>
                         <div class="input-group-append">
-                                <button id="import_btn" class="bs-btn bs-btn-secondary input-group-text"><%= t("dashboard.new.importdata_upload-parse") %></button>
+                                <button id="import_btn" type="btn" class="bs-btn bs-btn-secondary input-group-text"><%= t("dashboard.new.importdata_upload-parse") %></button>
                         </div>
                 </div>
                 <small id="killDateHelp" class="form-text text-muted"><%= t("dashboard.new.tooltip_importdata") %></small>
@@ -64,7 +65,160 @@
 </div>
 
 <%= javascriptTag("dashboard.js") %>
+<%= javascriptTag("papaparse.min.js") %>
 <script charset="utf-8">
+        // ==============================
+        var apiUrl = window.location.origin + "/api/v1/";
+        // ==============================
+
+
+        document.getElementById('input-file').addEventListener('change', inputCSVChange, false);
+
+        var parserConfig = {
+          header: true,
+          complete: function complete(res) {
+            createData(res);
+          }
+        }; // getCSVFile gets the uploaded CSV file which the users has added
+
+        function inputCSVChange(event) {
+          console.log("Getting CSV file");
+          var reader = new FileReader();
+          reader.onload = parseCSV;
+          reader.readAsText(event.target.files[0]);
+          console.log("[----] CSV parsed!");
+        }
+
+        function parseCSV(event) {
+          console.log(event.target.result);
+          var data = Papa.parse(event.target.result, parserConfig);
+        }
+
+        async function createData(res) {
+          var data = res.data;
+          var teachers = new Map();
+          var classes = new Map();
+
+          for(i = 0; i < data.length; i++) {
+            var dat = data[i];
+
+            var _teacher = {
+                name: dat['teacher_name'],
+                mail: dat['teacher_mail'],
+                room: dat['teacher_room']
+            };
+
+            try {
+                    // skip if array is empty
+                    if(typeof data[i] === "undefined" ||
+                        _teacher.name.length == 0) {
+                      continue;
+                    }
+            } catch(e) {
+                continue;
+            };
+
+            // check if Teacher already exists
+            if(!teachers.has(_teacher.name)) {
+                console.log("Teacher does not exists. creating...");
+
+                var result = await createTeacher(_teacher);
+                teachers.set(_teacher.mail, result.id);
+                console.log("~~> Created teacher with id: " + result.id);
+            }
+
+            var _class = {
+                name: dat['class_name'],
+                num_students: Number(dat['num_students'])
+            };
+
+
+            try {
+                    // skip if _class.name is undefined
+                    if(_class.name.length == 0) {
+                        continue;
+                    }
+            } catch (e) {
+                continue;
+            };
+
+            // check if Class already exists
+            if(!classes.has(_class.name)) {
+                console.log("==>=======> " + JSON.stringify(_class));
+                console.log("Class does not exists. creating...");
+
+                var result = await createClass(_class);
+                classes.set(_class.name, result.id);
+                console.log("~~> Created class with id: " + result.id);
+            }
+
+            // map them
+            var _map = {
+                class: {
+                        name: dat['class_name'],
+                        num_students: Number(dat['num_students']),
+                        id: classes.get(_class.name)
+                },
+                subject: {
+                        subject_name: dat['subject'],
+                        class_id: classes.get(_class.name),
+                        teacher_id: teachers.get(_teacher.mail)
+                }
+            };
+
+            var result = await mapSubjectClass(_map);
+            console.log("++> Mapped " + JSON.stringify(result));
+          }
+        }
+
+        // creates a new Teacher
+        // @returns the 'TeacherID'
+        async function createTeacher(data) {
+          var response = await fetch(apiUrl + "teacher/new", {
+                body: JSON.stringify(data),
+                method: "POST",
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                credentials: "same-origin"
+          })
+          .catch(error=>console.log(error));
+
+          return await response.json();
+        }
+
+        // creates a new Class
+        // @returns the 'ClassID'
+        async function createClass(data) {
+          var response = await fetch(apiUrl + "class/new", {
+                body: JSON.stringify(data),
+                method: "POST",
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                credentials: "same-origin"
+          })
+          .catch(error=>console.log(error));
+
+          return await response.json();
+        }
+
+        // mapSubjectClass maps a Class with a Subject & Teacher
+        // @returns JSON struct defined in GoLang code
+        async function mapSubjectClass(data) {
+          var response = await fetch(apiUrl + "class/map", {
+                body: JSON.stringify(data),
+                method: "POST",
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                credentials: "same-origin"
+          })
+          .catch(error=>console.log(error));
+
+          return await response.json();
+        }
+
         $(function() {
                 $('#start_datepicker').datetimepicker({
                         format: 'yyyy-mm-dd hh:ii'
