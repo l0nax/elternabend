@@ -16,7 +16,7 @@ type Class struct {
 	NumStudents int       `json:"num_students" db:"num_students"`
 	CreatedAt   time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at" db:"updated_at"`
-	Msg         string    `json:"msg" db:"-"` // 'Msg' is only to send a Message back via the API
+	Msg         string    `json:"msg,omitempty" db:"-"` // 'Msg' is only to send a Message back via the API
 }
 
 // String is not required by pop and may be deleted
@@ -55,4 +55,14 @@ func (c *Class) ValidateCreate(tx *pop.Connection) (*validate.Errors, error) {
 // This method is not required and may be deleted.
 func (c *Class) ValidateUpdate(tx *pop.Connection) (*validate.Errors, error) {
 	return validate.NewErrors(), nil
+}
+
+// Exists checks if a Class already exists.
+func (c *Class) Exists(tx *pop.Connection) (bool, error) {
+	// search for class name
+	if err := tx.Where("name = ?", c.Name); err == nil {
+		return true, nil
+	}
+
+	return false, nil
 }
